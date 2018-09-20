@@ -123,8 +123,8 @@ export default new Vue({
       //     this.events = data;
       // }, "json");
       let events=[];
-      // let url = "http://192.168.0.15/~user12/booker/server/api/events/";
-      let url = "http://127.0.0.1/my/courses/booker/server/api/events/";
+      let url = "http://192.168.0.15/~user12/booker-server/server/api/events/";
+      // let url = "http://127.0.0.1/my/courses/booker-server/server/api/events/";
       fetch(url)
         .then(response => {
           if (response.ok) {

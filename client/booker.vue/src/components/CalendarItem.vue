@@ -192,9 +192,9 @@ export default {
   float: left;
 }
 
-.event-list {
+.event-detail {
   border: 1px solid rgb(40, 40, 70);
-  background: rgb(239, 233, 190);
+  background: rgb(208, 230, 181);
   padding: 20px;
 }
 
