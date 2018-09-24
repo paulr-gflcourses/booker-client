@@ -1,4 +1,6 @@
 import Vue from 'vue';
+const serverUrl = "http://192.168.0.15/~user12/booker-server/server/api/";
+// const url = "http://127.0.0.1/my/courses/booker/booker-server/server/api/";
 
 export default new Vue({
 
@@ -99,9 +101,7 @@ export default new Vue({
 
     getEvents(){
       let events=[];
-      // let url = "http://192.168.0.15/~user12/booker-server/server/api/events/"; 
-      let url = "http://127.0.0.1/my/courses/booker/booker-server/server/api/events/?idroom="+this.currentRoom.id;
-      // let url = "http://127.0.0.1/my/courses/booker/booker-server/server/api/events/";
+      let url = serverUrl+"events/?idroom="+this.currentRoom.id; 
       fetch(url)
         .then(response => {
           if (response.ok) {
@@ -115,6 +115,7 @@ export default new Vue({
             event.start_time = new Date(event.start_time);
             event.end_time = new Date(event.end_time);
             event.created_time = new Date(event.created_time);
+            event.is_recurring = (event.is_recurring === '1');
             events.push(event);
           });
   
@@ -128,8 +129,7 @@ export default new Vue({
 
     getUsers(){
       let users=[];
-      // let url = "http://192.168.0.15/~user12/booker-server/server/api/users/"; 
-      let url = "http://127.0.0.1/my/courses/booker/booker-server/server/api/users/";
+      let url = serverUrl+"users/"; 
       fetch(url)
         .then(response => {
           if (response.ok) {
@@ -140,15 +140,7 @@ export default new Vue({
         .then(json => {
           //users = json;
           json.forEach(user => {
-            // users.push({
-            //   id: user.id,
-            //   username: user.username,
-            //   fullname: user.fullname,
-
-            // });
-
             users.push(user);
-
           });
         })
         .catch(error => {
@@ -160,8 +152,7 @@ export default new Vue({
 
     getRooms(){
       let rooms=[];
-      // let url = "http://192.168.0.15/~user12/booker-server/server/api/rooms/"; 
-      let url = "http://127.0.0.1/my/courses/booker/booker-server/server/api/rooms/";
+      let url = serverUrl+"rooms/";
       fetch(url)
         .then(response => {
           if (response.ok) {
@@ -186,6 +177,49 @@ export default new Vue({
         });
 
         return rooms;
+    },
+
+    updateEvent(event){
+   
+      let url = serverUrl+"events/"+event.id;
+      let formData = new FormData();
+      formData.append('description', event.descripton);
+      formData.append('id', event.id);
+      let params=JSON.stringify(event);
+      // formData = {
+      //   description: event.descripton, 
+      //   id: event.id
+      // };
+      
+      let options = {
+        method: 'PUT',
+        body: params
+      };
+      fetch(url, options)
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Network response was not ok");
+        })
+        .then(json => {
+          //rooms = json;
+        //   json.forEach(room => {
+        //     rooms.push(room);
+        //   });
+
+        //   if (rooms.length>0){
+        //     this.currentRoom = rooms[0];
+        //     this.events = this.getEvents();
+        //  }
+          alert('succesfully updated! '+json);
+          
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+       
     },
 
   }

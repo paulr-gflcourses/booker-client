@@ -3,7 +3,7 @@
       <div class="rooms">
         <ul>
           <li v-for="(room, index) in rooms" :key="index">
-            <a href="#" @click="selectRoom(room)">Boardroom {{index}}</a>
+            <a href="#" @click="selectRoom(room)">Boardroom {{index+1}}</a>
           </li>
         </ul>
         <br>
@@ -121,9 +121,9 @@ export default {
   },
 
   mounted(){
-
     
   },
+  
   components: {
     DayItem
   },
@@ -202,7 +202,10 @@ export default {
 
 <style>
 
-
+.rooms{
+  margin: 0px;
+  text-align: center;
+}
 .rooms ul{
 	display: inline-block;
 }

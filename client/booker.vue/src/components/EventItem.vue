@@ -9,25 +9,29 @@
       <div class="time">
           <label for="time">When</label>
           <input type="time" id="start-time" name="start-time"
-                  min="08:00" max="20:00" step="1800" pattern="[0-9]{2}:[0-9]{2}" required v-model="start_time"/>
+                  min="08:00" max="20:00" step="1800" pattern="[0-9]{2}:[0-9]{2}" required v-model="event.start_time"/>
                     - 
           <input type="time" id="end-time" name="end-time"
-                  min="08:00" max="20:00" step="1800" pattern="[0-9]{2}:[0-9]{2}" required v-model="end_time"/>
+                  min="08:00" max="20:00" step="1800" pattern="[0-9]{2}:[0-9]{2}" required v-model="event.end_time"/>
       </div>
       <div>
         <label for="description">Notes</label>
-        <textarea name="description" id="description" cols="30" rows="2" v-model="description"></textarea>
+        <textarea name="description" id="description" cols="30" rows="2" v-model="event.description"></textarea>
       </div>
       <div>
         <label for="user">Who</label>
-        <select name="user" id="user" v-model="iduser">
+        <select name="user" id="user" v-model="event.iduser">
           <option v-for="(user, index) in users" :key="index" v-bind:value="user.id">{{ user.fullname }}</option>
         </select>
       </div>
       <div>
-        <b>Submitted:</b> {{ created_time | fullDateTimeFormat}}
+        <b>Submitted:</b> {{ event.created_time | fullDateTimeFormat}}
       </div>
 
+      <div v-if="event.is_recurring">
+        <input  type="checkbox">Apply to all occurences?</input>
+      </div>
+      
       <div>
         <button @click="update">UPDATE</button>
         <button @click="remove">DELETE</button>
@@ -46,11 +50,7 @@ export default {
 
   data() {
     return {
-      start_time: "",
-      end_time: "",
-      created_time: "",
-      description: "",
-      iduser: "",
+
       event: ""
     };
   },
@@ -90,26 +90,34 @@ export default {
       return date.toLocaleTimeString("en-US", options);
     },
     setFields() {
-      this.event = calendar.getEventById(this.id);
-      this.start_time = this.timeFormat(this.event.start_time);
-      this.end_time = this.timeFormat(this.event.end_time);
-      this.created_time = this.event.created_time;
-      this.description = this.event.description;
-      this.iduser = this.event.iduser;
+      let event = calendar.getEventById(this.id);
+      this.event = Object.assign({},event);
+      // this.event = event;
+
+      // this.start_time = this.timeFormat(this.event.start_time);
+      // this.end_time = this.timeFormat(this.event.end_time);
+
+      this.event.start_time = this.timeFormat(this.event.start_time);
+      this.event.end_time = this.timeFormat(this.event.end_time);
+
+      // this.created_time = this.event.created_time;
+      // this.description = this.event.description;
+      // this.iduser = this.event.iduser;
     },
     update() {
-      // alert('are you sure to update?');
-      // this.event.start_time.setHours(this.start_time);
+      let event = calendar.getEventById(this.id);
       this.event.start_time = this.setTimeFromStr(
-        this.start_time,
-        this.event.start_time
+        this.event.start_time,
+        event.start_time
       );
       this.event.end_time = this.setTimeFromStr(
-        this.end_time,
-        this.event.end_time
+        this.event.end_time,
+        event.end_time
       );
-      this.event.description = this.description;
-      this.event.iduser = this.iduser;
+
+      calendar.updateEvent(this.event);
+      // this.event.description = this.description;
+      // this.event.iduser = this.iduser;
     },
     remove() {
       alert("are you sure to delete?");
