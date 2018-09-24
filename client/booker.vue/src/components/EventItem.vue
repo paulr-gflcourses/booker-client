@@ -2,30 +2,6 @@
     <div class="event-panel">
         <h2>Event</h2> 
 
-         <!-- <div class="event-panel" v-if="dayChecked"> -->
-
-
-      <!-- <div class="task-form">
-          <h3>Add new task</h3>
-          <label for="taskName">Task name</label>
-          <input type="text" id="taskName" ref="taskName" name="" />
-          <button @click="saveTask">Save</button>
-      </div> -->
-        
-        
-      <!-- <div class="event-list">
-      <p v-if="!events">No events for selected day ({{dayChecked | formatDateFull}}).</p>
-      <div v-else>
-        <h2>Events</h2>
-        <p>Date - {{dayChecked | formatDateFull}}</p>
-        <ol>
-          <li v-for="(event,index) in events" :key="index">
-            {{event.description}}
-          </li>
-        </ol>
-      </div>
-      
-      </div> -->
   
     <div class="event-detail">
       <h2>B.B. DETAILS:</h2>
@@ -33,10 +9,10 @@
       <div class="time">
           <label for="time">When</label>
           <input type="time" id="start-time" name="start-time"
-                  min="8:00" max="20:00" required v-model="start_time"/>
+                  min="08:00" max="20:00" step="1800" pattern="[0-9]{2}:[0-9]{2}" required v-model="start_time"/>
                     - 
           <input type="time" id="end-time" name="end-time"
-                  min="8:00" max="20:00" required v-model="end_time"/>
+                  min="08:00" max="20:00" step="1800" pattern="[0-9]{2}:[0-9]{2}" required v-model="end_time"/>
       </div>
       <div>
         <label for="description">Notes</label>
@@ -44,9 +20,8 @@
       </div>
       <div>
         <label for="user">Who</label>
-        <select name="user" id="user" v-model="user">
-          <option value="">Al Davis</option>
-          <option value="">Bob Tensy</option>
+        <select name="user" id="user" v-model="iduser">
+          <option v-for="(user, index) in users" :key="index" v-bind:value="user.id">{{ user.fullname }}</option>
         </select>
       </div>
       <div>
@@ -59,10 +34,7 @@
       </div>
        
     </div>
-   
-      
 
-    <!-- </div> -->
     </div>
 </template>
 
@@ -78,7 +50,7 @@ export default {
       end_time: "",
       created_time: "",
       description: "",
-      user: "",
+      iduser: "",
       event: ""
     };
   },
@@ -86,14 +58,11 @@ export default {
   created() {
     this.setFields();
   },
-  updated() {
-    // this.setFields();
-  },
 
   computed: {
-    //  event(){
-    //   return
-    //  }
+    users() {
+      return calendar.users;
+    }
   },
 
   watch: {
@@ -126,17 +95,30 @@ export default {
       this.end_time = this.timeFormat(this.event.end_time);
       this.created_time = this.event.created_time;
       this.description = this.event.description;
+      this.iduser = this.event.iduser;
     },
-    update(){
+    update() {
       // alert('are you sure to update?');
       // this.event.start_time.setHours(this.start_time);
-      let d= Date.parse('2012-01-14 '+ this.start_time);
-      let d2 = new Date(d);
-      this.event.start_time.setHours(d2.getHours());
-      this.event.start_time.setMinutes(d2.getMinutes());
+      this.event.start_time = this.setTimeFromStr(
+        this.start_time,
+        this.event.start_time
+      );
+      this.event.end_time = this.setTimeFromStr(
+        this.end_time,
+        this.event.end_time
+      );
+      this.event.description = this.description;
+      this.event.iduser = this.iduser;
     },
-    remove(){
-      alert('are you sure to delete?');
+    remove() {
+      alert("are you sure to delete?");
+    },
+    setTimeFromStr(strTime, date) {
+      let d = new Date("2018-01-01 " + strTime);
+      date.setHours(d.getHours());
+      date.setMinutes(d.getMinutes());
+      return date;
     }
   }
 };

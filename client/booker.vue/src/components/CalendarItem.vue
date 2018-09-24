@@ -1,12 +1,32 @@
 <template>
     <div>
+      <div class="rooms">
+        <ul>
+          <li v-for="(room, index) in rooms" :key="index">
+            <a href="#" @click="selectRoom(room)">Boardroom {{index}}</a>
+          </li>
+        </ul>
+        <br>
+          <ul>
+          <li v-for="(room, index) in rooms" :key="index">
+            <a href="#" @click="selectRoom(room)"> {{room.name}}</a> 
+          </li>
+        </ul>
+       
+        
+      </div>
        <div class="calendar">
         <div class="cal-head">
-          <button class="prev-month" @click="month--"> &larr; </button>
-          <span class="show-date">{{ showedDate | formatDate}}</span>
-          <button class="next-month" @click="month++"> &rarr; </button>
 
-          <p>
+          <div class="month-buttons">
+            <button class="prev-month" @click="month--"> &larr; </button>
+            <span class="show-date">{{ showedDate | formatDate}}</span>
+            <span class="selected-room">{{ currentRoom.name }}</span>
+            <button class="next-month" @click="month++"> &rarr; </button>
+          </div>
+         
+
+          <p class="toggle">
             <label for="month">Month</label>
             <select name="" id="month" v-model="month">
               <option value="0">January</option>
@@ -28,7 +48,7 @@
         
         </div>
 
-        
+        <div class="cal-main">
 
     <table  border="1px"> 
         <tr>
@@ -44,36 +64,24 @@
         <tr
          v-for="(week, indexWeek) in daysArray" 
         :key="indexWeek">
-
-        <day-item
-            v-for="(date,index) in week" 
-            :date="date"
-        :key="index"
-        v-on:select-day="selectDay"
-        v-on:show-event="showEvent"
-        >
-        </day-item>
+          <day-item
+              v-for="(date,index) in week" 
+              :date="date"
+              :key="index"
+              v-on:select-day="selectDay"
+              v-on:show-event="showEvent"
+          >
+          </day-item>
         </tr>
     </table>
+</div>
 
     </div>
 
+<button>Book It!</button>
+<button>Employee List</button>
   <router-view></router-view>
     
-   
-
-  
-  <!-- <div>
-  probe:
-<button @click="getEvents">Get from db</button>
-    <div>
-     <ol>
-          <li v-for="(event,index) in events" :key="index">{{task}}
-            {{event.id}} - {{event.description}}
-          </li>
-        </ol>
-    </div>
-  </div> -->
     
 
     </div>
@@ -88,11 +96,12 @@ import DayItem from "./DayItem";
 export default {
   data: function() {
     return {
-      // tasks: "",
+
       day: calendar.today.getDate(),
       month: calendar.today.getMonth(),
       year: calendar.today.getFullYear(),
-      events: []
+      events: [],
+      // currentRoom: ""
     };
   },
   watch: {
@@ -111,6 +120,10 @@ export default {
     }
   },
 
+  mounted(){
+
+    
+  },
   components: {
     DayItem
   },
@@ -124,6 +137,12 @@ export default {
     },
     daysArray() {
       return calendar.currentMonthDays(this.year, this.month);
+    },
+    rooms(){
+      return calendar.rooms;
+    },
+    currentRoom(){
+      return calendar.currentRoom;
     }
   },
 
@@ -149,6 +168,11 @@ export default {
       // this.tasks = calendar.getDayTasks(date);
     },
 
+    selectRoom(room){
+      calendar.currentRoom = room;
+      calendar.events = calendar.getEvents();
+     },
+
     // saveTask() {
     //   let taskName = this.$refs.taskName.value;
     //   let taskList = calendar.getDayTasks(calendar.selectedDate);
@@ -166,6 +190,7 @@ export default {
     // },
 
     getEvents() {
+     
       this.events = calendar.events; //getEvents();
     },
     showEvent(event) {
@@ -176,6 +201,26 @@ export default {
 </script>
 
 <style>
+
+
+.rooms ul{
+	display: inline-block;
+}
+
+.rooms ul li{
+	display: inline-block;
+}
+
+.rooms li:before{
+	content: " | ";
+	display: inline;
+}
+
+.rooms ul li:first-child:before{
+	content: "";
+	display: none;
+}
+
 .calendar {
   /*width: 355px;*/
   margin-left: 40px;
@@ -210,12 +255,21 @@ export default {
   float: right;
 }
 
+.prev-month, .next-month{
+  height: 40px;
+  width: 60px;
+}
 .show-date {
   border: 1px solid rgb(40, 40, 70);
   background: rgb(228, 226, 231);
   text-align: center;
   margin-left: 26%;
   padding: 5px;
+}
+
+.selected-room{
+   border: 1px solid rgb(40, 40, 70);
+   padding: 5px;
 }
 
 td {
@@ -228,8 +282,8 @@ td {
   background: rgb(189, 179, 207);
   /* padding: 15px; */
   padding: 5px;
-  width: 80px;
-  height: 80px;
+  width: 81px;
+  height: 81px;
   font-size: 11pt;
   /* text-align: center; */
 }

@@ -7,37 +7,25 @@ export default new Vue({
       currentMonthDate: new Date(),
       today: new Date(),
       selectedDate: '',
-      // tasks: [],
-      events: []
 
-     
+      events: [],
+      users: [],
+      rooms: [],
+      currentRoom: ""
 
     }
   },
   
 
   created() {
-    // let localTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-    // localTasks.forEach(element => {
-    //   element.date = new Date(element.date)
-    // });
-    // this.tasks = localTasks || this.defaultTasks;
-    let roomEvents = this.getEvents();
-    // roomEvents.forEach (event =>{
-    //   event.start_time = new Date(event.start_time);
-    //   event.end_time = new Date(event.end_time);
-    //   event.created_time = new Date(event.created_time);
-    // });
-    this.events = roomEvents;
+    this.rooms = this.getRooms();
+    // this.events = this.getEvents();
+    this.users = this.getUsers();
+    
   },
 
   watch: {
-    // tasks: {
-    //   handler: function (tasks) {
-    //     localStorage.setItem('tasks', JSON.stringify(this.tasks || []));
-    //   },
-    //   deep: true
-    // }
+
   },
 
   methods: {
@@ -92,14 +80,6 @@ export default new Vue({
       }
     },
 
-    // getDayTasks(date) {
-    //   let tasks = this.tasks.filter((day) =>
-    //     this.isEqualsDays(day.date, date));
-    //   if (tasks.length > 0) {
-    //     return tasks[0].task;
-    //   }
-    //   return false;
-    // },
     getDayEvents(date) {
       let events = this.events.filter((event) =>
         this.isEqualsDays(event.start_time, date));
@@ -118,13 +98,10 @@ export default new Vue({
     },
 
     getEvents(){
-        //     let url = 'http://192.168.0.15/~user12/booker/server/api/events/';
-      //     $.get(url,  function (data) {
-      //     this.events = data;
-      // }, "json");
       let events=[];
-      let url = "http://192.168.0.15/~user12/booker-server/server/api/events/";
-      // let url = "http://127.0.0.1/my/courses/booker-server/server/api/events/";
+      // let url = "http://192.168.0.15/~user12/booker-server/server/api/events/"; 
+      let url = "http://127.0.0.1/my/courses/booker/booker-server/server/api/events/?idroom="+this.currentRoom.id;
+      // let url = "http://127.0.0.1/my/courses/booker/booker-server/server/api/events/";
       fetch(url)
         .then(response => {
           if (response.ok) {
@@ -133,25 +110,83 @@ export default new Vue({
           throw new Error("Network response was not ok");
         })
         .then(json => {
+         
           json.forEach(event => {
-            events.push({
-              id: event.id,
-              idrec: event.idrec,
-              description: event.description,
-              start_time: new Date(event.start_time),
-              end_time: new Date(event.end_time),
-              created_time: new Date(event.created_time),
-              idroom: event.idroom,
-              iduser: event.iduser
-            });
+            event.start_time = new Date(event.start_time);
+            event.end_time = new Date(event.end_time);
+            event.created_time = new Date(event.created_time);
+            events.push(event);
           });
+  
         })
         .catch(error => {
           console.log(error);
         });
 
         return events;
-    }
+    },
+
+    getUsers(){
+      let users=[];
+      // let url = "http://192.168.0.15/~user12/booker-server/server/api/users/"; 
+      let url = "http://127.0.0.1/my/courses/booker/booker-server/server/api/users/";
+      fetch(url)
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Network response was not ok");
+        })
+        .then(json => {
+          //users = json;
+          json.forEach(user => {
+            // users.push({
+            //   id: user.id,
+            //   username: user.username,
+            //   fullname: user.fullname,
+
+            // });
+
+            users.push(user);
+
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+        return users;
+    },
+
+    getRooms(){
+      let rooms=[];
+      // let url = "http://192.168.0.15/~user12/booker-server/server/api/rooms/"; 
+      let url = "http://127.0.0.1/my/courses/booker/booker-server/server/api/rooms/";
+      fetch(url)
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Network response was not ok");
+        })
+        .then(json => {
+          //rooms = json;
+          json.forEach(room => {
+            rooms.push(room);
+          });
+
+          if (rooms.length>0){
+            this.currentRoom = rooms[0];
+            this.events = this.getEvents();
+         }
+          
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+        return rooms;
+    },
 
   }
 });
