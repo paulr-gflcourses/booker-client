@@ -51,7 +51,8 @@ export default {
   data() {
     return {
 
-      event: ""
+      event: "",
+      
     };
   },
 
@@ -62,7 +63,8 @@ export default {
   computed: {
     users() {
       return calendar.users;
-    }
+    },
+    
   },
 
   watch: {

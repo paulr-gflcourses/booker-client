@@ -78,7 +78,10 @@
 
     </div>
 
-<button>Book It!</button>
+
+<router-link to="/newEvent">
+  <button>Book It!</button>
+</router-link>
 <button>Employee List</button>
   <router-view></router-view>
     

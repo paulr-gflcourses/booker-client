@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-
+      <h1 class="caption">Boardroom Booker</h1>
       <!-- <calendar-item></calendar-item> -->
       <router-view/>
   </div>
@@ -21,6 +21,10 @@ export default {
 </script>
 
 <style>
+  .caption{
+    text-align: center;
+    
+  }
   .fade-enter-active, .fade-leave-active {
     transition: opacity .5s;
   }

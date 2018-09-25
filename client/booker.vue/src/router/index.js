@@ -4,8 +4,10 @@ import Router from 'vue-router'
 import CalendarItem from '@/components/CalendarItem'
 import LoginItem from '@/components/LoginItem'
 import EventItem from '@/components/EventItem'
+import BookItem from '@/components/BookItem'
 
 import Page404 from '@/components/Page404'
+import calendar from '../calendar/calendar';
 // import HomePage from '@/components/HomePage'
 // import CartPage from '@/components/CartPage'
 // import ProductPage from '@/components/ProductPage'
@@ -35,7 +37,12 @@ export default new Router({
       path: '/login',
       name: 'LoginItem',
       component: LoginItem
-
+    },
+    {
+      path: '/newEvent',
+      name: 'BookItem',
+      component: BookItem,
+      // props: {date: calendar.selectedDate}
     },
     // {
     //   path: '/event/:id',
