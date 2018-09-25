@@ -1,6 +1,7 @@
 import Vue from 'vue';
-const serverUrl = "http://192.168.0.15/~user12/booker-server/server/api/";
-// const url = "http://127.0.0.1/my/courses/booker/booker-server/server/api/";
+import axios from 'axios'
+// const serverUrl = "http://192.168.0.15/~user12/booker-server/server/api/";
+const serverUrl = "http://127.0.0.1/my/courses/booker/booker-server/server/api/";
 
 export default new Vue({
 
@@ -17,13 +18,13 @@ export default new Vue({
 
     }
   },
-  
+
 
   created() {
     this.rooms = this.getRooms();
     // this.events = this.getEvents();
     this.users = this.getUsers();
-    
+
   },
 
   watch: {
@@ -91,17 +92,17 @@ export default new Vue({
       return false;
     },
 
-    getEventById(id){
-      let event =  this.events.filter((event) => event.id === id);
+    getEventById(id) {
+      let event = this.events.filter((event) => event.id === id);
       if (event.length > 0) {
         return event[0];
       }
       return event;
     },
 
-    getEvents(){
-      let events=[];
-      let url = serverUrl+"events/?idroom="+this.currentRoom.id; 
+    getEvents() {
+      let events = [];
+      let url = serverUrl + "events/?idroom=" + this.currentRoom.id;
       fetch(url)
         .then(response => {
           if (response.ok) {
@@ -110,7 +111,7 @@ export default new Vue({
           throw new Error("Network response was not ok");
         })
         .then(json => {
-         
+
           json.forEach(event => {
             event.start_time = new Date(event.start_time);
             event.end_time = new Date(event.end_time);
@@ -118,18 +119,18 @@ export default new Vue({
             event.is_recurring = (event.is_recurring === '1');
             events.push(event);
           });
-  
+
         })
         .catch(error => {
           console.log(error);
         });
 
-        return events;
+      return events;
     },
 
-    getUsers(){
-      let users=[];
-      let url = serverUrl+"users/"; 
+    getUsers() {
+      let users = [];
+      let url = serverUrl + "users/";
       fetch(url)
         .then(response => {
           if (response.ok) {
@@ -147,12 +148,12 @@ export default new Vue({
           console.log(error);
         });
 
-        return users;
+      return users;
     },
 
-    getRooms(){
-      let rooms=[];
-      let url = serverUrl+"rooms/";
+    getRooms() {
+      let rooms = [];
+      let url = serverUrl + "rooms/";
       fetch(url)
         .then(response => {
           if (response.ok) {
@@ -166,60 +167,91 @@ export default new Vue({
             rooms.push(room);
           });
 
-          if (rooms.length>0){
+          if (rooms.length > 0) {
             this.currentRoom = rooms[0];
             this.events = this.getEvents();
-         }
-          
+          }
+
         })
         .catch(error => {
           console.log(error);
         });
 
-        return rooms;
+      return rooms;
     },
 
-    updateEvent(event){
-   
-      let url = serverUrl+"events/"+event.id;
+    updateEvent(event) {
+
+      let url = serverUrl + "events/" + event.id;
       let formData = new FormData();
       formData.append('description', event.descripton);
       formData.append('id', event.id);
-      let params=JSON.stringify(event);
+      let params = JSON.stringify(event);
       // formData = {
       //   description: event.descripton, 
       //   id: event.id
       // };
-      
-      let options = {
-        method: 'PUT',
-        body: params
-      };
-      fetch(url, options)
+
+
+
+      // let headers = new Headers();
+      // // headers.append('Content-Type', 'application/json');
+      // // headers.append('Accept', 'application/json');
+
+      // headers.append('Access-Control-Allow-Origin', '*');
+      // // headers.append('Access-Control-Allow-Credentials', 'true');
+      // // headers.append('GET', 'POST', 'PUT', 'OPTIONS');
+
+      // let opt = {
+      //   mode: 'cors-with-forced-preflight',
+      //   method: 'PUT',
+      //   // credentials: 'include',
+      //   headers: headers,
+      //   body: params
+      // };
+      // fetch(url, opt)
+      //   .then(response => {
+      //     if (response.ok) {
+      //       return response.json();
+      //     }
+      //     throw new Error("Network response was not ok");
+      //   })
+      //   .then(json => {
+      //     //rooms = json;
+      //   //   json.forEach(room => {
+      //   //     rooms.push(room);
+      //   //   });
+
+      //   //   if (rooms.length>0){
+      //   //     this.currentRoom = rooms[0];
+      //   //     this.events = this.getEvents();
+      //   //  }
+      //     alert('succesfully updated! '+json);
+
+      //   })
+      //   .catch(error => {
+      //     console.log(error);
+      //   });
+
+      axios.put(url, {
+          body: params
+        })
         .then(response => {
+          console.log(response);
           if (response.ok) {
             return response.json();
           }
-          throw new Error("Network response was not ok");
+          // throw new Error("Network response was not ok");
         })
         .then(json => {
-          //rooms = json;
-        //   json.forEach(room => {
-        //     rooms.push(room);
-        //   });
+          alert('succesfully updated! ' + json);
 
-        //   if (rooms.length>0){
-        //     this.currentRoom = rooms[0];
-        //     this.events = this.getEvents();
-        //  }
-          alert('succesfully updated! '+json);
-          
         })
         .catch(error => {
           console.log(error);
         });
 
-       
+
     },
 
   }
