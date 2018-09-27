@@ -1,6 +1,8 @@
 import Vue from 'vue';
+// import router from '../router';
 // import axios from 'axios'
-const serverUrl = "http://192.168.0.15/~user12/booker-server/server/api/";
+// const serverUrl = "http://192.168.0.15/~user12/booker-server/server/api/";
+const serverUrl = "http://127.0.0.1/~paul/booker/booker-server/server/api/";
 // const serverUrl = "http://127.0.0.1/my/courses/booker/booker-server/server/api/";
 
 export default new Vue({
@@ -226,9 +228,10 @@ export default new Vue({
         //     this.currentRoom = rooms[0];
         //     this.events = this.getEvents();
         //  }
-          alert('succesfully updated! '+json);
-          alert('stringify: '+JSON.stringify(json));
-          alert('Parsed: '+JSON.parse(json));
+          this.events = this.getEvents();
+          // alert('succesfully updated! '+json);
+          // alert('stringify: '+JSON.stringify(json));
+          // alert('Parsed: '+JSON.parse(json));
 
         })
         .catch(error => {
@@ -258,15 +261,59 @@ export default new Vue({
 
     },
     addEvent(event){
-      console.log(event);
+      // console.log(event);
+      let formData= new FormData();
+      formData.append('probe1','value1');
+      formData.append('probe2','value3');
+      
+      let obj={a:"44", b:"klgf"};
+      let data = JSON.stringify(event);
+      
+      console.log('data: '+data);
+      console.log('formData: '+formData);
       let url = serverUrl + "events/";
-      let opt = {
+      let opt = { 
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(event)
+        body: data
+        // body: formData
+      };
+      
+      fetch(url, opt)
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Network response was not ok");
+        })
+        .then(json => {
+          this.events = this.getEvents();
+          // alert('succesfully added! '+json);
+       
+          
+          // alert('stringify: '+JSON.stringify(json));
+          // alert('Parsed: '+JSON.parse(json));
+
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+    },
+
+    deleteEvent(id){
+      let url = serverUrl + "events/"+id;
+      let opt = { 
+        method: 'DELETE',
+        // headers: {
+        //   'Accept': 'application/json',
+        //   'Content-Type': 'application/json'
+        // },
+        // body: data
+        // // body: formData
       };
       fetch(url, opt)
         .then(response => {
@@ -276,9 +323,10 @@ export default new Vue({
           throw new Error("Network response was not ok");
         })
         .then(json => {
-          alert('succesfully updated! '+json);
-          alert('stringify: '+JSON.stringify(json));
-          alert('Parsed: '+JSON.parse(json));
+          this.events = this.getEvents();
+          // alert('succesfully deleted! '+json);
+          // alert('stringify: '+JSON.stringify(json));
+          // alert('Parsed: '+JSON.parse(json));
 
         })
         .catch(error => {

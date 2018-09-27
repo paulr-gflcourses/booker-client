@@ -5,7 +5,7 @@
       restDay: isRestDay,
       currentDay: isCurrentDay, 
       hasEvent: isEventExists, 
-      notAvaiable: isNotAvaiable, 
+      otherMonth: isOtherMonth, 
       selected: isDaySelected}"  
       v-on:click="$emit('select-day', date, events)"> 
 
@@ -62,7 +62,7 @@ export default {
       return false;
     },
 
-    isNotAvaiable() {
+    isOtherMonth() {
       return !calendar.isEqualsMonth(this.date, calendar.currentMonthDate);
     }
   },

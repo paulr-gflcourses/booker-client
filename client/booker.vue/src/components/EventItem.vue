@@ -122,7 +122,8 @@ export default {
       // this.event.iduser = this.iduser;
     },
     remove() {
-      alert("are you sure to delete?");
+      // alert("are you sure to delete?");
+      calendar.deleteEvent(this.event.id);
     },
     setTimeFromStr(strTime, date) {
       let d = new Date("2018-01-01 " + strTime);

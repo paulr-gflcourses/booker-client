@@ -12,7 +12,7 @@
          2. I would like to book this meeting:
       </p>
       <p>
-         <input type="date" name="date"  v-model="event.date"/>
+         <input type="date" name="date" v-model="event.date"/>
       </p>
       <p>
          3. Specify what the time and end of the meeting. 
@@ -80,6 +80,7 @@
 <script>
 import calendar from "../calendar/calendar";
 
+
 export default {
   props: [],
 
@@ -113,6 +114,7 @@ export default {
   methods: {
     submit(){
       calendar.addEvent(this.event);
+      this.$router.push('/');
     }
   }
 };

@@ -78,11 +78,23 @@
 
     </div>
 
+<div class="right-panel">
+  <div>
+    <router-link to="/newEvent">
+      <button>Book It!</button>
+    </router-link>
+  </div>
 
-<router-link to="/newEvent">
-  <button>Book It!</button>
-</router-link>
-<button>Employee List</button>
+  <div>
+    <router-link to="/emloyees">
+      <button>Employee List</button>
+    </router-link>
+  </div>
+</div>
+
+
+
+
   <router-view></router-view>
     
     
@@ -318,7 +330,7 @@ td {
   background: rgb(206, 189, 172);
 }
 
-.notAvaiable {
+.otherMonth {
   background: rgb(228, 226, 231);
   color: rgb(148, 144, 156);
 }
@@ -336,6 +348,12 @@ td {
 .selected.day:hover,
 .selected {
   background: rgb(103, 82, 128);
+}
+
+.right-panel{
+  margin-top: 50px;
+  margin-left: 100px;
+  /* padding: 50px; */
 }
 
 .fade-enter-active,
