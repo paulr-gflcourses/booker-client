@@ -2,8 +2,10 @@ import Vue from 'vue';
 // import router from '../router';
 // import axios from 'axios'
 // const serverUrl = "http://192.168.0.15/~user12/booker-server/server/api/";
+
 const serverUrl = "http://127.0.0.1/~paul/booker/booker-server/server/api/";
 // const serverUrl = "http://127.0.0.1/my/courses/booker/booker-server/server/api/";
+
 
 export default new Vue({
 
@@ -196,19 +198,20 @@ export default new Vue({
 
 
 
-      // let headers = new Headers();
-      // // headers.append('Content-Type', 'application/json');
-      // // headers.append('Accept', 'application/json');
+      let headers = new Headers();
+      // headers.append('Content-Type', 'application/json');
+      // headers.append('Accept', 'application/json');
 
-      // headers.append('Access-Control-Allow-Origin', '*');
-      // // headers.append('Access-Control-Allow-Credentials', 'true');
-      // // headers.append('GET', 'POST', 'PUT', 'OPTIONS');
+      headers.append('Access-Control-Allow-Origin', '*');
+      // headers.append('Access-Control-Allow-Credentials', 'true');
+      // headers.append('GET', 'POST', 'PUT', 'OPTIONS');
+      headers.append('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
 
       let opt = {
         // mode: 'cors-with-forced-preflight',
         method: 'PUT',
         // credentials: 'include',
-        // headers: headers,
+        headers: headers,
         body: params
       };
       fetch(url, opt)
@@ -244,7 +247,7 @@ export default new Vue({
       //     body: params
       //   })
       //   .then(response => {
-      //     console.log(response);
+          console.log(response);
       //     if (response.ok) {
       //       return response.json();
       //     }
