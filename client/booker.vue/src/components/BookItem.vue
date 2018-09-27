@@ -19,10 +19,10 @@
          (This will be what people see on the calendar).
       </p>
       <p>
-         <input type="time" name="time_start" v-model="event.time_start">
+         <input type="time" name="start_time" v-model="event.start_time">
       </p>
       <p>
-        <input type="time" name="time_end" v-model="event.time_end">
+        <input type="time" name="end_time" v-model="event.end_time">
       </p>
       <p>
          4. Enter the specifics for the meeting.
@@ -55,7 +55,7 @@
          <label for="bi-weekly">bi-weekly</label>
          <br>
          <input name="period" id="monthly" type="radio" value="monthly" selected v-model="event.period">
-         <label for="monthly">bi-weekly</label>
+         <label for="monthly">monthly</label>
       </p>
 
       <p>
@@ -80,48 +80,58 @@
 <script>
 import calendar from "../calendar/calendar";
 
-
 export default {
   props: [],
 
   data() {
     return {
-      event:{
+      event: {
         iduser: "",
-       date: calendar.selectedDate,
-       time_start: "",
-       time_end: "",
-       description: "",
-       is_recurring: "false",
-       period: "",
-       duration_recurring: "",
-
+        date: calendar.selectedDate,
+        start_time: "",
+        end_time: "",
+        description: "",
+        is_recurring: "false",
+        period: "",
+        duration_recurring: "",
+        idroom: "1"
       }
-       
     };
   },
 
-  computed: {
-   users(){
-     return calendar.users;
-   },
-   
+  created(){
+    this.fillFish();
   },
 
-  filters: {
-    
+  computed: {
+    users() {
+      return calendar.users;
+    }
   },
+
+  filters: {},
   methods: {
-    submit(){
+    submit() {
       calendar.addEvent(this.event);
       this.$router.push('/');
+    },
+    fillFish(){
+        this.event.iduser= "2",
+        this.event.date= "2018-09-28",
+        this.event.start_time = "15:00",
+        this.event.end_time = "15:30",
+        this.event.description = "Some test description...",
+        this.event.is_recurring = "true",
+        this.event.period = "bi-weekly",
+        this.event.duration_recurring = "5",
+        this.event.idroom = "1"
     }
   }
 };
 </script>
 
 <style>
-.new-event{
+.new-event {
   margin-left: 40px;
   margin-top: 20px;
   padding: 20px;

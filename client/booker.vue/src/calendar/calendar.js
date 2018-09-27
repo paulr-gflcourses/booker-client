@@ -1,9 +1,9 @@
 import Vue from 'vue';
 // import router from '../router';
 // import axios from 'axios'
-// const serverUrl = "http://192.168.0.15/~user12/booker-server/server/api/";
+const serverUrl = "http://192.168.0.15/~user12/booker/booker-server/server/api/";
 
-const serverUrl = "http://127.0.0.1/~paul/booker/booker-server/server/api/";
+// const serverUrl = "http://127.0.0.1/~paul/booker/booker-server/server/api/";
 // const serverUrl = "http://127.0.0.1/my/courses/booker/booker-server/server/api/";
 
 
@@ -126,6 +126,7 @@ export default new Vue({
 
         })
         .catch(error => {
+          alert('Error: '+error);
           console.log(error);
         });
 
@@ -149,6 +150,7 @@ export default new Vue({
           });
         })
         .catch(error => {
+          
           console.log(error);
         });
 
@@ -196,8 +198,6 @@ export default new Vue({
       //   id: event.id
       // };
 
-
-
       let headers = new Headers();
       // headers.append('Content-Type', 'application/json');
       // headers.append('Accept', 'application/json');
@@ -232,12 +232,13 @@ export default new Vue({
         //     this.events = this.getEvents();
         //  }
           this.events = this.getEvents();
-          // alert('succesfully updated! '+json);
+          alert('succesfully updated! '+json);
           // alert('stringify: '+JSON.stringify(json));
           // alert('Parsed: '+JSON.parse(json));
 
         })
         .catch(error => {
+          alert('Error: '+error);
           console.log(error);
         });
 
@@ -272,8 +273,8 @@ export default new Vue({
       let obj={a:"44", b:"klgf"};
       let data = JSON.stringify(event);
       
-      console.log('data: '+data);
-      console.log('formData: '+formData);
+      // console.log('data: '+data);
+      // console.log('formData: '+formData);
       let url = serverUrl + "events/";
       let opt = { 
         method: 'POST',
@@ -294,7 +295,7 @@ export default new Vue({
         })
         .then(json => {
           this.events = this.getEvents();
-          // alert('succesfully added! '+json);
+          alert('succesfully added! '+json);
        
           
           // alert('stringify: '+JSON.stringify(json));
@@ -302,6 +303,7 @@ export default new Vue({
 
         })
         .catch(error => {
+          alert('Server: '+error);
           console.log(error);
         });
 
@@ -333,6 +335,7 @@ export default new Vue({
 
         })
         .catch(error => {
+          alert('Error: '+error);
           console.log(error);
         });
 

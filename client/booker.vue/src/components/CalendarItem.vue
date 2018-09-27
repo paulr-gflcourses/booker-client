@@ -188,24 +188,8 @@ export default {
       calendar.events = calendar.getEvents();
      },
 
-    // saveTask() {
-    //   let taskName = this.$refs.taskName.value;
-    //   let taskList = calendar.getDayTasks(calendar.selectedDate);
-    //   if (taskList) {
-    //     taskList.push(taskName);
-    //   } else {
-    //     calendar.tasks.push({
-    //       date: new Date(calendar.selectedDate),
-    //       task: [taskName]
-    //     });
-    //     this.tasks = calendar.getDayTasks(calendar.selectedDate);
-    //   }
-
-    //   this.$refs.taskName.value = "";
-    // },
-
+    
     getEvents() {
-     
       this.events = calendar.events; //getEvents();
     },
     showEvent(event) {

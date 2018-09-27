@@ -50,9 +50,7 @@ export default {
 
   data() {
     return {
-
-      event: "",
-      
+      event: ""
     };
   },
 
@@ -63,8 +61,7 @@ export default {
   computed: {
     users() {
       return calendar.users;
-    },
-    
+    }
   },
 
   watch: {
@@ -87,13 +84,19 @@ export default {
     }
   },
   methods: {
+
     timeFormat(date) {
       let options = { hour: "2-digit", minute: "2-digit", hour12: false };
       return date.toLocaleTimeString("en-US", options);
     },
+
+    sqlDateTimeFormat(date) {
+      return date.toISOString().slice(0, 19).replace("T", " ");
+    },
+
     setFields() {
       let event = calendar.getEventById(this.id);
-      this.event = Object.assign({},event);
+      this.event = Object.assign({}, event);
       // this.event = event;
 
       // this.start_time = this.timeFormat(this.event.start_time);
@@ -106,32 +109,35 @@ export default {
       // this.description = this.event.description;
       // this.iduser = this.event.iduser;
     },
-    update() {
-      let event = calendar.getEventById(this.id);
-      this.event.start_time = this.setTimeFromStr(
-        this.event.start_time,
-        event.start_time
-      );
-      this.event.end_time = this.setTimeFromStr(
-        this.event.end_time,
-        event.end_time
-      );
 
-      calendar.updateEvent(this.event);
+    update() {
+      let eventForm = Object.assign({}, this.event);
+      let event = calendar.getEventById(this.id);
+      let time1 = this.setTimeFromStr(eventForm.start_time, event.start_time);
+      eventForm.start_time = this.sqlDateTimeFormat(time1);
+      let time2 = this.setTimeFromStr(eventForm.end_time, event.end_time);
+      eventForm.end_time = this.sqlDateTimeFormat(time2);
+
+      calendar.updateEvent(eventForm);
+      this.setFields();
       // this.event.description = this.description;
       // this.event.iduser = this.iduser;
     },
+
     remove() {
       // alert("are you sure to delete?");
       calendar.deleteEvent(this.event.id);
     },
+
     setTimeFromStr(strTime, date) {
       let d = new Date("2018-01-01 " + strTime);
       date.setHours(d.getHours());
       date.setMinutes(d.getMinutes());
       return date;
     }
+
   }
+  
 };
 </script>
 
