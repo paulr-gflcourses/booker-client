@@ -41,9 +41,16 @@ export default {
 
     isRestDay() {
       let dayOfWeek = calendar.getLocalDay(this.date);
-      if (dayOfWeek === 5 || dayOfWeek === 6) {
+      if (calendar.isTime24){
+        if (dayOfWeek === 5 || dayOfWeek === 6) {
         return true;
       }
+      }else{
+        if (dayOfWeek === 0 || dayOfWeek === 6) {
+        return true;
+      }
+      }
+      
       return false;
     },
 

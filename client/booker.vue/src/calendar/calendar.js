@@ -1,10 +1,10 @@
 import Vue from 'vue';
 // import router from '../router';
 // import axios from 'axios'
-const serverUrl = "http://192.168.0.15/~user12/booker/booker-server/server/api/";
+// const serverUrl = "http://192.168.0.15/~user12/booker/booker-server/server/api/";
 
 // const serverUrl = "http://127.0.0.1/~paul/booker/booker-server/server/api/";
-// const serverUrl = "http://127.0.0.1/my/courses/booker/booker-server/server/api/";
+const serverUrl = "http://127.0.0.1/my/courses/booker/booker-server/server/api/";
 
 
 export default new Vue({
@@ -18,7 +18,8 @@ export default new Vue({
       events: [],
       users: [],
       rooms: [],
-      currentRoom: ""
+      currentRoom: "",
+      isTime24: this.getTimeConfig()
 
     }
   },
@@ -36,6 +37,11 @@ export default new Vue({
   },
 
   methods: {
+    getTimeConfig() {
+      return true;
+    },
+
+
 
     currentMonthDays(yearDate, monthDate) {
       let d = new Date(yearDate, monthDate, 1);
@@ -62,10 +68,14 @@ export default new Vue({
 
     getLocalDay: function (date) {
       var day = date.getDay();
-      if (day == 0) {
-        day = 7;
+      if (this.isTime24) {
+        if (day == 0) {
+          day = 7;
+        }
+        return day - 1;
+      } else {
+        return day;
       }
-      return day - 1;
     },
 
     isEqualsDays(date1, date2) {
@@ -117,16 +127,16 @@ export default new Vue({
         .then(json => {
 
           json.forEach(event => {
-            event.start_time = new Date(event.start_time);
-            event.end_time = new Date(event.end_time);
-            event.created_time = new Date(event.created_time);
+            event.start_time = new Date(event.start_time + " UTC");
+            event.end_time = new Date(event.end_time + " UTC");
+            event.created_time = new Date(event.created_time + " UTC");
             event.is_recurring = (event.is_recurring === '1');
             events.push(event);
           });
 
         })
         .catch(error => {
-          alert('Error: '+error);
+          alert('Error: ' + error);
           console.log(error);
         });
 
@@ -150,7 +160,7 @@ export default new Vue({
           });
         })
         .catch(error => {
-          
+
           console.log(error);
         });
 
@@ -223,22 +233,22 @@ export default new Vue({
         })
         .then(json => {
           //rooms = json;
-        //   json.forEach(room => {
-        //     rooms.push(room);
-        //   });
+          //   json.forEach(room => {
+          //     rooms.push(room);
+          //   });
 
-        //   if (rooms.length>0){
-        //     this.currentRoom = rooms[0];
-        //     this.events = this.getEvents();
-        //  }
+          //   if (rooms.length>0){
+          //     this.currentRoom = rooms[0];
+          //     this.events = this.getEvents();
+          //  }
           this.events = this.getEvents();
-          alert('succesfully updated! '+json);
+          // alert('succesfully updated! '+json);
           // alert('stringify: '+JSON.stringify(json));
           // alert('Parsed: '+JSON.parse(json));
 
         })
         .catch(error => {
-          alert('Error: '+error);
+          alert('Error: ' + error);
           console.log(error);
         });
 
@@ -248,7 +258,7 @@ export default new Vue({
       //     body: params
       //   })
       //   .then(response => {
-          console.log(response);
+      console.log(response);
       //     if (response.ok) {
       //       return response.json();
       //     }
@@ -264,28 +274,21 @@ export default new Vue({
 
 
     },
-    addEvent(event){
-      // console.log(event);
-      let formData= new FormData();
-      formData.append('probe1','value1');
-      formData.append('probe2','value3');
-      
-      let obj={a:"44", b:"klgf"};
+    addEvent(event) {
+
       let data = JSON.stringify(event);
-      
-      // console.log('data: '+data);
-      // console.log('formData: '+formData);
       let url = serverUrl + "events/";
-      let opt = { 
+
+      let headers = new Headers();
+      headers.append('Access-Control-Allow-Origin', '*');
+      headers.append('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
+      let opt = {
         method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
+        headers: headers,
         body: data
         // body: formData
       };
-      
+
       fetch(url, opt)
         .then(response => {
           if (response.ok) {
@@ -295,23 +298,23 @@ export default new Vue({
         })
         .then(json => {
           this.events = this.getEvents();
-          alert('succesfully added! '+json);
-       
-          
+          // alert('succesfully added! '+json);
+
+
           // alert('stringify: '+JSON.stringify(json));
           // alert('Parsed: '+JSON.parse(json));
 
         })
         .catch(error => {
-          alert('Server: '+error);
+          alert('Server: ' + error);
           console.log(error);
         });
 
     },
 
-    deleteEvent(id){
-      let url = serverUrl + "events/"+id;
-      let opt = { 
+    deleteEvent(id) {
+      let url = serverUrl + "events/" + id;
+      let opt = {
         method: 'DELETE',
         // headers: {
         //   'Accept': 'application/json',
@@ -335,7 +338,7 @@ export default new Vue({
 
         })
         .catch(error => {
-          alert('Error: '+error);
+          alert('Error: ' + error);
           console.log(error);
         });
 

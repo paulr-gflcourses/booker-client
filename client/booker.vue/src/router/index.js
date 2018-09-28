@@ -5,6 +5,8 @@ import CalendarItem from '@/components/CalendarItem'
 import LoginItem from '@/components/LoginItem'
 import EventItem from '@/components/EventItem'
 import BookItem from '@/components/BookItem'
+import EmployeeListItem from '@/components/EmployeeListItem'
+import EmployeeItem from '@/components/EmployeeItem'
 
 import Page404 from '@/components/Page404'
 import calendar from '../calendar/calendar';
@@ -42,6 +44,25 @@ export default new Router({
       path: '/newEvent',
       name: 'BookItem',
       component: BookItem,
+      // props: {date: calendar.selectedDate}
+    },
+    {
+      path: '/employees',
+      name: 'EmployeeListItem',
+      component: EmployeeListItem,
+      // props: {date: calendar.selectedDate}
+    },
+    {
+      path: '/employee/:id',
+      name: 'EmployeeItem',
+      component: EmployeeItem,
+      props: true
+      // props: {date: calendar.selectedDate}
+    },
+    {
+      path: '/employee',
+      name: 'EmployeeItem',
+      component: EmployeeItem
       // props: {date: calendar.selectedDate}
     },
     // {

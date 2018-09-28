@@ -52,13 +52,16 @@
 
     <table  border="1px"> 
         <tr>
-            <td>Monday</td>
+          <td v-for="(dayName,index) in weekDayNames" :key="index">
+            {{dayName}}
+          </td>
+            <!-- <td>Monday</td>
             <td>Tuesday</td>
             <td>Wednesday</td>
             <td>Thursday</td>
             <td>Friday</td>
             <td>Saturday</td>
-            <td>Sunday</td>
+            <td>Sunday</td> -->
         </tr>
 
         <tr
@@ -80,13 +83,17 @@
 
 <div class="right-panel">
   <div>
+    <input id="time24" type="checkbox" v-model="isTime24">
+    <label for="time24">24-hour format</label>
+  </div>
+  <div>
     <router-link to="/newEvent">
       <button>Book It!</button>
     </router-link>
   </div>
 
   <div>
-    <router-link to="/emloyees">
+    <router-link to="/employees">
       <button>Employee List</button>
     </router-link>
   </div>
@@ -116,6 +123,7 @@ export default {
       month: calendar.today.getMonth(),
       year: calendar.today.getFullYear(),
       events: [],
+      isTime24: calendar.isTime24
       // currentRoom: ""
     };
   },
@@ -132,6 +140,9 @@ export default {
     year: function(val) {
       calendar.currentMonthDate.setFullYear(val);
       this.year = calendar.currentMonthDate.getFullYear();
+    },
+    isTime24: function(val){
+      calendar.isTime24 = val;
     }
   },
 
@@ -158,6 +169,13 @@ export default {
     },
     currentRoom(){
       return calendar.currentRoom;
+    },
+    weekDayNames(){
+       if (calendar.isTime24){
+        return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      }else{
+        return ["Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+      }
     }
   },
 

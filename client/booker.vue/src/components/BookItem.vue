@@ -71,7 +71,7 @@
       </div>
       
       <p>
-        <button @click="submit">Submit</button>
+        <button @click="saveEvent">Submit</button>
       </p>
 
     </div>
@@ -111,9 +111,21 @@ export default {
 
   filters: {},
   methods: {
-    submit() {
-      calendar.addEvent(this.event);
+    toTimestampFormat(dateStr, timeStr) {
+      let date = new Date(dateStr+ " "+timeStr);
+      return (date.getTime()/1000).toFixed()
+    },
+    saveEvent() {
+      let event = this.transformFields();
+      calendar.addEvent(event);
       this.$router.push('/');
+    },
+    transformFields(){
+      let eventCopy = Object.assign({}, this.event);
+      eventCopy.start_time = this.toTimestampFormat(this.event.date, eventCopy.start_time);
+      eventCopy.end_time = this.toTimestampFormat(this.event.date, eventCopy.end_time);
+      return eventCopy;
+
     },
     fillFish(){
         this.event.iduser= "2",

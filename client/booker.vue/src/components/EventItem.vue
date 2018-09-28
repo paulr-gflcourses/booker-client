@@ -25,11 +25,12 @@
         </select>
       </div>
       <div>
-        <b>Submitted:</b> {{ event.created_time | fullDateTimeFormat}}
+        <b>Submitted:</b> {{ event.created_time | fullDatetoStrTime}}
       </div>
 
       <div v-if="event.is_recurring">
-        <input  type="checkbox">Apply to all occurences?</input>
+        <input id="isrec" type="checkbox"/>
+        <label for="isrec">Apply to all occurences?</label>
       </div>
       
       <div>
@@ -69,8 +70,9 @@ export default {
       this.setFields();
     }
   },
+
   filters: {
-    fullDateTimeFormat(date) {
+    fullDatetoStrTime(date) {
       let options = {
         day: "numeric",
         month: "numeric",
@@ -83,57 +85,40 @@ export default {
       return date.toLocaleString("en-GB", options);
     }
   },
+
   methods: {
 
-    timeFormat(date) {
+    toStrTime(date) {
       let options = { hour: "2-digit", minute: "2-digit", hour12: false };
       return date.toLocaleTimeString("en-US", options);
     },
 
-    sqlDateTimeFormat(date) {
-      return date.toISOString().slice(0, 19).replace("T", " ");
+    toTimestampFormat(dateSrc, timeStr) {
+      let date = new Date(dateSrc.toDateString()+ " "+timeStr);
+      return (date.getTime()/1000).toFixed()
     },
 
     setFields() {
-      let event = calendar.getEventById(this.id);
-      this.event = Object.assign({}, event);
-      // this.event = event;
-
-      // this.start_time = this.timeFormat(this.event.start_time);
-      // this.end_time = this.timeFormat(this.event.end_time);
-
-      this.event.start_time = this.timeFormat(this.event.start_time);
-      this.event.end_time = this.timeFormat(this.event.end_time);
-
-      // this.created_time = this.event.created_time;
-      // this.description = this.event.description;
-      // this.iduser = this.event.iduser;
+      this.event = Object.assign({}, calendar.getEventById(this.id));
+      this.event.start_time = this.toStrTime(this.event.start_time);
+      this.event.end_time = this.toStrTime(this.event.end_time);
     },
 
     update() {
-      let eventForm = Object.assign({}, this.event);
-      let event = calendar.getEventById(this.id);
-      let time1 = this.setTimeFromStr(eventForm.start_time, event.start_time);
-      eventForm.start_time = this.sqlDateTimeFormat(time1);
-      let time2 = this.setTimeFromStr(eventForm.end_time, event.end_time);
-      eventForm.end_time = this.sqlDateTimeFormat(time2);
+      let eventCopy = Object.assign({}, this.event);
+      let date = calendar.getEventById(this.id).start_time;
 
-      calendar.updateEvent(eventForm);
+      eventCopy.start_time = this.toTimestampFormat(date, eventCopy.start_time);
+      eventCopy.end_time = this.toTimestampFormat(date, eventCopy.end_time);
+
+      calendar.updateEvent(eventCopy);
       this.setFields();
-      // this.event.description = this.description;
-      // this.event.iduser = this.iduser;
+
     },
 
     remove() {
       // alert("are you sure to delete?");
       calendar.deleteEvent(this.event.id);
-    },
-
-    setTimeFromStr(strTime, date) {
-      let d = new Date("2018-01-01 " + strTime);
-      date.setHours(d.getHours());
-      date.setMinutes(d.getMinutes());
-      return date;
     }
 
   }
