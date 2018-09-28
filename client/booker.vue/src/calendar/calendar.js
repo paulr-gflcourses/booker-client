@@ -1,10 +1,10 @@
 import Vue from 'vue';
 // import router from '../router';
 // import axios from 'axios'
-// const serverUrl = "http://192.168.0.15/~user12/booker/booker-server/server/api/";
+const serverUrl = "http://192.168.0.15/~user12/booker/booker-server/server/api/";
 
 // const serverUrl = "http://127.0.0.1/~paul/booker/booker-server/server/api/";
-const serverUrl = "http://127.0.0.1/my/courses/booker/booker-server/server/api/";
+// const serverUrl = "http://127.0.0.1/my/courses/booker/booker-server/server/api/";
 
 
 export default new Vue({
@@ -19,7 +19,8 @@ export default new Vue({
       users: [],
       rooms: [],
       currentRoom: "",
-      isTime24: this.getTimeConfig()
+      isTime24: this.getTimeConfig(),
+      isMondayFirst: this.getFirstDayConfig()
 
     }
   },
@@ -37,6 +38,9 @@ export default new Vue({
   },
 
   methods: {
+    getFirstDayConfig(){
+      return true;
+    },
     getTimeConfig() {
       return true;
     },
@@ -68,7 +72,7 @@ export default new Vue({
 
     getLocalDay: function (date) {
       var day = date.getDay();
-      if (this.isTime24) {
+      if (this.isMondayFirst) {
         if (day == 0) {
           day = 7;
         }

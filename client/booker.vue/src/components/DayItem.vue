@@ -13,7 +13,8 @@
       <ul>
           <li v-for="(event,index) in events" :key="index">
             <!-- <a href="event" v-on:click="$emit('show-event', event)"> -->
-              <router-link :to="event | eventLink">
+              <router-link :to="event | eventLink" class="event-link">
+                
                 {{event.start_time | formatTime}} - {{event.end_time | formatTime}}
               </router-link>
             <!-- </a> -->
@@ -41,16 +42,16 @@ export default {
 
     isRestDay() {
       let dayOfWeek = calendar.getLocalDay(this.date);
-      if (calendar.isTime24){
+      if (calendar.isMondayFirst) {
         if (dayOfWeek === 5 || dayOfWeek === 6) {
-        return true;
-      }
-      }else{
+          return true;
+        }
+      } else {
         if (dayOfWeek === 0 || dayOfWeek === 6) {
-        return true;
+          return true;
+        }
       }
-      }
-      
+
       return false;
     },
 
@@ -78,20 +79,21 @@ export default {
     formatDate(date) {
       return date.getDate();
     },
-    formatTime(date){
-      // return ""+date.getHours() +":"+ date.getMinutes();
-      let options={hour12:false, hour:'2-digit', minute: '2-digit'};
-      return date.toLocaleTimeString('en-US', options)
+    formatTime(date) {
+      let isHour12 = !calendar.isTime24;
+      let options = { hour12: isHour12, hour: "2-digit", minute: "2-digit" };
+      return date.toLocaleTimeString("en-US", options);
     },
-    eventLink(event){
-      return '/event/'+event.id;
+    eventLink(event) {
+      return "/event/" + event.id;
     }
   },
-  methods: {
- 
-  }
+  methods: {}
 };
 </script>
 
 <style>
+.event-link:focus{
+  color: rgb(229, 188, 211);
+}
 </style>

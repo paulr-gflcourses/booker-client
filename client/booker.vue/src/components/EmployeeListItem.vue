@@ -6,7 +6,8 @@
              <button>Back</button>
             </router-link>
         </div>
-        <table>
+
+        <table class="employees-table">
 
             <tr v-for="(employee, index) in employeeList" :key="index">
                 <td>
@@ -64,11 +65,11 @@ export default {
 </script>
 
 <style>
-table{
+.employees-table{
     border: 0px;
 
 }
-table td{
+.employees-table td{
     border: 0px;
     padding: 10px;
 }

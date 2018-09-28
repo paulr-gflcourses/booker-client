@@ -1,17 +1,28 @@
 <template>
     <div>
       <div class="rooms">
-        <ul>
+        <div>
+          <ul>
           <li v-for="(room, index) in rooms" :key="index">
             <a href="#" @click="selectRoom(room)">Boardroom {{index+1}}</a>
           </li>
         </ul>
-        <br>
+        </div>
+
+        <div class="room">
           <ul>
           <li v-for="(room, index) in rooms" :key="index">
             <a href="#" @click="selectRoom(room)"> {{room.name}}</a> 
           </li>
         </ul>
+        </div>
+   
+          
+          <div class="options">
+    <router-link to="/options">
+      <button>Options</button>
+    </router-link>
+  </div>
        
         
       </div>
@@ -55,13 +66,6 @@
           <td v-for="(dayName,index) in weekDayNames" :key="index">
             {{dayName}}
           </td>
-            <!-- <td>Monday</td>
-            <td>Tuesday</td>
-            <td>Wednesday</td>
-            <td>Thursday</td>
-            <td>Friday</td>
-            <td>Saturday</td>
-            <td>Sunday</td> -->
         </tr>
 
         <tr
@@ -82,10 +86,10 @@
     </div>
 
 <div class="right-panel">
-  <div>
-    <input id="time24" type="checkbox" v-model="isTime24">
-    <label for="time24">24-hour format</label>
-  </div>
+
+  
+  
+
   <div>
     <router-link to="/newEvent">
       <button>Book It!</button>
@@ -114,15 +118,14 @@
 import calendar from "../calendar/calendar";
 
 import DayItem from "./DayItem";
-
 export default {
   data: function() {
     return {
-
       day: calendar.today.getDate(),
       month: calendar.today.getMonth(),
       year: calendar.today.getFullYear(),
       events: [],
+      isMondayFirst: calendar.isMondayFirst,
       isTime24: calendar.isTime24
       // currentRoom: ""
     };
@@ -141,15 +144,16 @@ export default {
       calendar.currentMonthDate.setFullYear(val);
       this.year = calendar.currentMonthDate.getFullYear();
     },
-    isTime24: function(val){
+    isMondayFirst: function(val) {
+      calendar.isMondayFirst = val;
+    },
+    isTime24: function(val) {
       calendar.isTime24 = val;
     }
   },
 
-  mounted(){
-    
-  },
-  
+  mounted() {},
+
   components: {
     DayItem
   },
@@ -164,17 +168,33 @@ export default {
     daysArray() {
       return calendar.currentMonthDays(this.year, this.month);
     },
-    rooms(){
+    rooms() {
       return calendar.rooms;
     },
-    currentRoom(){
+    currentRoom() {
       return calendar.currentRoom;
     },
-    weekDayNames(){
-       if (calendar.isTime24){
-        return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-      }else{
-        return ["Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    weekDayNames() {
+      if (calendar.isMondayFirst) {
+        return [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday"
+        ];
+      } else {
+        return [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday"
+        ];
       }
     }
   },
@@ -197,16 +217,15 @@ export default {
       this.month = date.getMonth();
       this.year = date.getFullYear();
       // this.events = calendar.getDayEvents(date);
-      
+
       // this.tasks = calendar.getDayTasks(date);
     },
 
-    selectRoom(room){
+    selectRoom(room) {
       calendar.currentRoom = room;
       calendar.events = calendar.getEvents();
-     },
+    },
 
-    
     getEvents() {
       this.events = calendar.events; //getEvents();
     },
@@ -218,27 +237,31 @@ export default {
 </script>
 
 <style>
-
-.rooms{
+.rooms {
   margin: 0px;
   text-align: center;
 }
-.rooms ul{
-	display: inline-block;
+.rooms ul {
+  display: inline-block;
 }
 
-.rooms ul li{
-	display: inline-block;
+.rooms ul li {
+  display: inline-block;
 }
 
-.rooms li:before{
-	content: " | ";
-	display: inline;
+.rooms li:before {
+  content: " | ";
+  display: inline;
 }
 
-.rooms ul li:first-child:before{
-	content: "";
-	display: none;
+.rooms ul li:first-child:before {
+  content: "";
+  display: none;
+}
+
+.options{
+  float: right;
+  margin-right: 100px;
 }
 
 .calendar {
@@ -275,7 +298,8 @@ export default {
   float: right;
 }
 
-.prev-month, .next-month{
+.prev-month,
+.next-month {
   height: 40px;
   width: 60px;
 }
@@ -287,9 +311,9 @@ export default {
   padding: 5px;
 }
 
-.selected-room{
-   border: 1px solid rgb(40, 40, 70);
-   padding: 5px;
+.selected-room {
+  border: 1px solid rgb(40, 40, 70);
+  padding: 5px;
 }
 
 td {
@@ -352,7 +376,7 @@ td {
   background: rgb(103, 82, 128);
 }
 
-.right-panel{
+.right-panel {
   margin-top: 50px;
   margin-left: 100px;
   /* padding: 50px; */

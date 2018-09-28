@@ -7,6 +7,7 @@ import EventItem from '@/components/EventItem'
 import BookItem from '@/components/BookItem'
 import EmployeeListItem from '@/components/EmployeeListItem'
 import EmployeeItem from '@/components/EmployeeItem'
+import OptionsItem from '@/components/OptionsItem'
 
 import Page404 from '@/components/Page404'
 import calendar from '../calendar/calendar';
@@ -63,6 +64,12 @@ export default new Router({
       path: '/employee',
       name: 'EmployeeItem',
       component: EmployeeItem
+      // props: {date: calendar.selectedDate}
+    },
+    {
+      path: '/options',
+      name: 'OptionsItem',
+      component: OptionsItem
       // props: {date: calendar.selectedDate}
     },
     // {

@@ -1,5 +1,11 @@
 <template>
     <div class="new-event">
+      <div>
+           <router-link to="/">
+             <button>Back</button>
+            </router-link>
+        </div>
+
       <p>
          1. Booked for
       </p>
@@ -87,7 +93,7 @@ export default {
     return {
       event: {
         iduser: "",
-        date: calendar.selectedDate,
+        date: "",
         start_time: "",
         end_time: "",
         description: "",
@@ -99,44 +105,94 @@ export default {
     };
   },
 
-  created(){
+  created() {
     this.fillFish();
   },
 
   computed: {
     users() {
       return calendar.users;
+    },
+    is_event_recurring(){
+      return (this.event.is_recurring === "true");
     }
   },
 
   filters: {},
   methods: {
     toTimestampFormat(dateStr, timeStr) {
-      let date = new Date(dateStr+ " "+timeStr);
-      return (date.getTime()/1000).toFixed()
+      let date = new Date(dateStr + " " + timeStr);
+      return (date.getTime() / 1000).toFixed();
     },
+    formatDate(date) {
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      month = month < 10 ? "0" + month : "" + month;
+      let day = date.getDate();
+      return "" + year + "-" + month + "-" + day;
+    },
+
     saveEvent() {
       let event = this.transformFields();
-      calendar.addEvent(event);
-      this.$router.push('/');
+      
+      // calendar.addEvent(event);
+      // this.$router.push('/');
     },
-    transformFields(){
-      let eventCopy = Object.assign({}, this.event);
-      eventCopy.start_time = this.toTimestampFormat(this.event.date, eventCopy.start_time);
-      eventCopy.end_time = this.toTimestampFormat(this.event.date, eventCopy.end_time);
-      return eventCopy;
 
+    transformFields() {
+      let eventCopy = Object.assign({}, this.event);
+      eventCopy.start_time = this.toTimestampFormat(
+        this.event.date,
+        eventCopy.start_time
+      );
+      eventCopy.end_time = this.toTimestampFormat(
+        this.event.date,
+        eventCopy.end_time
+      );
+      if (this.is_event_recurring) {
+        
+        let date = new Date(this.event.date + " " + this.event.start_time);
+        eventCopy.days = this.getRecurringDays(date);
+
+      }
+      return eventCopy;
     },
-    fillFish(){
-        this.event.iduser= "2",
-        this.event.date= "2018-09-28",
-        this.event.start_time = "15:00",
-        this.event.end_time = "15:30",
-        this.event.description = "Some test description...",
-        this.event.is_recurring = "true",
-        this.event.period = "bi-weekly",
-        this.event.duration_recurring = "5",
-        this.event.idroom = "1"
+
+    getRecurringDays(firstDate) {
+      let days = [firstDate];
+      let n = this.event.duration_recurring;
+      let periodInDays = 0;
+      if (this.event.period === "weekly") {
+        periodInDays = 7 * 1;
+      } else if (this.event.period === "bi-weekly") {
+        periodInDays = 7 * 2;
+      } else {
+        periodInDays = 7 * 4;
+      }
+      
+      for (let i = 0; i < n; i++) {
+        let nextDate = new Date(firstDate);
+        nextDate.setDate(firstDate.getDate() + periodInDays * (i + 1));
+        days.push(nextDate);
+      }
+    //  alert(days);
+      return days;
+    },
+
+    
+    fillFish() {
+      this.event.iduser = "2";
+      if (calendar.selectedDate) {
+        this.event.date = this.formatDate(calendar.selectedDate);
+      }
+
+      this.event.start_time = "15:00";
+      this.event.end_time = "15:30";
+      this.event.description = "Some test description...";
+      this.event.is_recurring = "true";
+      this.event.period = "weekly";
+      this.event.duration_recurring = "3";
+      this.event.idroom = "1";
     }
   }
 };
