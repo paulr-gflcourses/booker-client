@@ -16,7 +16,7 @@
                      </a>
                 </td>
                <td>
-                   <a href="#" @click="removeEmployee(employee.id)">Remove</a>
+                   <a href="#" @click="removeEmployee(employee)">Remove</a>
                </td>
                 <td>
                <router-link :to="employee | employeeLink">
@@ -59,9 +59,20 @@ export default {
     }
   },
   methods: {
-      removeEmployee(id){
-          alert("employee "+id+" removed!")
-      }
+      removeEmployee(user){
+      usersModel.removeUser(user)
+      .then(response => {
+        calendar.getUsers();
+        alert('Added!');
+    //   this.$router.push('/');
+        // this.$router.go(-1)
+      })
+      .catch(error => {
+        // alert('Some Error: ('+error.status+")" + error.data.errors);
+        alert(error.data.errors);
+        console.log(error.data.errors);
+      });
+    },
  
   }
 };

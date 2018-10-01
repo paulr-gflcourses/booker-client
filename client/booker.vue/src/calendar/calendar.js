@@ -135,7 +135,7 @@ export default new Vue({
         this.users = response;
       })
       .catch(error => {
-        alert(error.data);
+        alert(error);
         console.log(error);
       });
 
@@ -193,17 +193,10 @@ export default new Vue({
 
     },
 
-    addUser(user){
-      usersModel.addUser(user)
-      .then(response => {
-        this.getUsers();
-      })
-      .catch(error => {
-        // alert('Some Error: ('+error.status+")" + error.data.errors);
-        alert(error.data.errors);
-        console.log(error.data.errors);
-      });
-    }
+   
+
+
+
 
   }
 });

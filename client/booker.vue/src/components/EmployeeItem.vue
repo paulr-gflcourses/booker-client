@@ -21,6 +21,10 @@
             <label for="password">4. Enter new employee password</label>
             <input id="password" type="password" v-model="user.password"/>
           </div>
+          <div>
+            <input id="is_admin" type="checkbox" v-model="user.is_admin"/>
+            <label for="password">Is Admin</label>
+          </div>
           <button @click="addEmployee">Add</button>
 
         </div>
@@ -31,6 +35,7 @@
 
 <script>
 import calendar from "../calendar/calendar";
+import usersModel from '../api/users'
 
 export default {
   props: ["id"],
@@ -38,14 +43,22 @@ export default {
   data() {
     return {
       user: {
+        
         fullname: "",
         email: "",
         username: "",
-        password: ""
+        password: "",
+        is_admin: true,
+        is_active: true
       }
     };
   },
 
+  created(){
+    if (this.id){
+      this.user = calendar.users.filter(user=>(user.id==this.id))[0];
+    }
+  },
   computed: {
    
   },
@@ -55,11 +68,38 @@ export default {
   },
   methods: {
     addEmployee(){
-      calendar.addUser(this.user);
-      alert('Added!');
+      usersModel.addUser(this.user)
+      .then(response => {
+        calendar.getUsers();
+        alert('Added!');
     //   this.$router.push('/');
-      this.$router.go(-1)
-    }
+        this.$router.go(-1)
+      })
+      .catch(error => {
+        // alert('Some Error: ('+error.status+")" + error.data.errors);
+        alert(error.data.errors);
+        console.log(error.data.errors);
+      });
+    },
+
+    updateEmployee(){
+      usersModel.updateUser(this.user)
+      .then(response => {
+        calendar.getUsers();
+        alert('Added!');
+    //   this.$router.push('/');
+        this.$router.go(-1)
+      })
+      .catch(error => {
+        // alert('Some Error: ('+error.status+")" + error.data.errors);
+        alert(error.data.errors);
+        console.log(error.data.errors);
+      });
+    },
+
+    
+
+   
  
   }
 };
