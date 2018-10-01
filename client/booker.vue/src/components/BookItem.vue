@@ -18,24 +18,26 @@
          2. I would like to book this meeting:
       </p>
       <p>
-         <input type="date" name="date" v-model="event.date"/>
+         <input type="date" name="date" required v-model="event.date"/>
       </p>
       <p>
          3. Specify what the time and end of the meeting. 
          (This will be what people see on the calendar).
       </p>
       <p>
-         <input type="time" name="start_time" v-model="event.start_time">
+         <input type="time" name="start_time" 
+         min="08:00" max="20:00" step="1800" pattern="[0-9]{2}:[0-9]{2}" required v-model="event.start_time">
       </p>
       <p>
-        <input type="time" name="end_time" v-model="event.end_time">
+        <input type="time" name="end_time" 
+        min="08:00" max="20:00" step="1800" pattern="[0-9]{2}:[0-9]{2}" required v-model="event.end_time">
       </p>
       <p>
          4. Enter the specifics for the meeting.
          (This will be what people see when they click on the event link).
       </p>
       <p>
-        <textarea name="description" id="" cols="40" rows="7" v-model="event.description">
+        <textarea name="description" id="" required cols="40" rows="7" v-model="event.description">
          </textarea>
       </p>
       <p>
@@ -120,9 +122,9 @@ export default {
   },
 
   filters: {},
-  methods: {
-    
 
+  methods: {
+  
     saveEvent() {
       let event = this.transformFields();
       calendar.addEvent(event);
@@ -131,39 +133,11 @@ export default {
 
     transformFields() {
       let eventCopy = Object.assign({}, this.event);
-
       let start_time = new Date(this.event.date + ' ' + eventCopy.start_time);
       eventCopy.start_time = utils.toTimestampFormat(start_time);
       let end_time = new Date(this.event.date + ' ' + eventCopy.end_time);
       eventCopy.end_time = utils.toTimestampFormat(end_time);
-
-      if (this.is_event_recurring) {
-        eventCopy.days = this.getRecurringDays(start_time, end_time);
-      }
       return eventCopy;
-    },
-
-    getRecurringDays(firstDate_start, firstDate_end) {
-      let days = [{start_time: firstDate_start, end_time: firstDate_end}];
-      let n = this.event.duration_recurring;
-      let periodInDays = 0;
-      if (this.event.period === "weekly") {
-        periodInDays = 7 * 1;
-      } else if (this.event.period === "bi-weekly") {
-        periodInDays = 7 * 2;
-      } else {
-        periodInDays = 7 * 4;
-      }
-      
-      for (let i = 0; i < n; i++) {
-        let nextDate_start = new Date(firstDate_start);
-        nextDate_start.setDate(firstDate_start.getDate() + periodInDays * (i + 1));
-        let nextDate_end = new Date(firstDate_end);
-        nextDate_end.setDate(firstDate_end.getDate() + periodInDays * (i + 1));
-        days.push({start_time:nextDate_start, end_time: nextDate_end});
-      }
-    //  alert(days);
-      return days;
     },
 
     
@@ -175,14 +149,12 @@ export default {
         this.event.date = utils.formatDate(new Date());
       }
       this.event.idroom = calendar.currentRoom.id;
+      this.event.is_recurring = "false";
 
-      this.event.start_time = "15:00";
-      this.event.end_time = "15:30";
-      this.event.description = "Some test description...";
-       this.event.is_recurring = "false";
-      // this.event.is_recurring = "true";
-      // this.event.period = "weekly";
-      // this.event.duration_recurring = "3";
+      // this.event.start_time = "15:00";
+      // this.event.end_time = "15:30";
+      // this.event.description = "Some test description...";
+      
       
     }
   }

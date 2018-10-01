@@ -235,6 +235,9 @@ export default {
 </script>
 
 <style>
+body{
+  background: rgb(255, 248, 223);
+}
 .rooms {
   margin: 0px;
   text-align: center;

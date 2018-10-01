@@ -1,7 +1,6 @@
 export default {
 
     toTimestampFormat(date) {
-        // let date = new Date(dateStr + " " + timeStr);
         return (date.getTime() / 1000).toFixed();
       },
       formatDate(date) {

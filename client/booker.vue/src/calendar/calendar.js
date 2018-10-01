@@ -170,8 +170,6 @@ export default new Vue({
     addEvent(event) {
       eventsModel.addEvent(event)
       .then(response => {
-        alert(response);
-        console.log(response);
         this.getEvents();
       })
       .catch(error => {

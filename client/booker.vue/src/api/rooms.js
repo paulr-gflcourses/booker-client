@@ -26,7 +26,6 @@ export default {
           reject(error);
         });
 
-      // return rooms;
     });
   },
 }
