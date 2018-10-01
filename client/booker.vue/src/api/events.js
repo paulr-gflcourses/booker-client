@@ -74,6 +74,22 @@ export default {
             reject(error);
           });
         });
+
+
+        // return new Promise((resolve, reject) => {
+        //   let url = serverUrl + "events/" + event.id;
+        //   axios.delete(url, event)
+        //     .then(response => {
+        //       resolve(response.data)
+        //     })
+        //     .catch(error => {
+        //       reject(error.response);
+        //     });
+        //   });
+  
+     
+
+
       }
   
 

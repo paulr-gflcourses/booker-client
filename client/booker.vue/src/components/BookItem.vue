@@ -56,13 +56,13 @@
          6. If it is recurring, specify weekly, bi-weekly, or monthly.
       </p>
       <p>
-         <input name="period" id="weekly" type="radio" value="weekly" selected v-model="event.period">
+         <input name="period" id="weekly" type="radio" value="weekly" checked="checked" v-model="event.period">
          <label for="weekly">weekly</label>
           <br>
-         <input name="period" id="bi-weekly" type="radio" value="bi-weekly" selected v-model="event.period">
+         <input name="period" id="bi-weekly" type="radio" value="bi-weekly"  v-model="event.period">
          <label for="bi-weekly">bi-weekly</label>
          <br>
-         <input name="period" id="monthly" type="radio" value="monthly" selected v-model="event.period">
+         <input name="period" id="monthly" type="radio" value="monthly" v-model="event.period">
          <label for="monthly">monthly</label>
       </p>
 
@@ -151,9 +151,10 @@ export default {
       this.event.idroom = calendar.currentRoom.id;
       this.event.is_recurring = "false";
 
-      // this.event.start_time = "15:00";
-      // this.event.end_time = "15:30";
-      // this.event.description = "Some test description...";
+      this.event.period = "weekly";
+      this.event.start_time = "15:00";
+      this.event.end_time = "15:30";
+      this.event.description = "Some test description...";
       
       
     }

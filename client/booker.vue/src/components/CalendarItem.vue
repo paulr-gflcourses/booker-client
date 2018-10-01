@@ -214,18 +214,15 @@ export default {
       this.day = date.getDate();
       this.month = date.getMonth();
       this.year = date.getFullYear();
-      // this.events = calendar.getDayEvents(date);
-
-      // this.tasks = calendar.getDayTasks(date);
     },
 
     selectRoom(room) {
       calendar.currentRoom = room;
-      calendar.events = calendar.getEvents();
+      calendar.getEvents();
     },
 
     getEvents() {
-      this.events = calendar.events; //getEvents();
+      this.events = calendar.events; 
     },
     showEvent(event) {
       alert("Event: " + event.description);

@@ -28,7 +28,7 @@ export default new Vue({
 
 
   created() {
-    this.rooms = this.getRooms();
+    this.getRooms();
     // this.events = this.getEvents();
     this.getUsers();
 
@@ -180,17 +180,30 @@ export default new Vue({
 
     },
 
-    deleteEvent(id) {
-      eventsModel.deleteEvent(id)
+    deleteEvent(event) {
+      eventsModel.deleteEvent(event)
       .then(response => {
+        console.log(response);
         this.getEvents();
       })
       .catch(error => {
         alert('Error: ' + error);
-        console.log(error);
+        console.log(error.data.errors);
       });
 
     },
+
+    addUser(user){
+      usersModel.addUser(user)
+      .then(response => {
+        this.getUsers();
+      })
+      .catch(error => {
+        // alert('Some Error: ('+error.status+")" + error.data.errors);
+        alert(error.data.errors);
+        console.log(error.data.errors);
+      });
+    }
 
   }
 });

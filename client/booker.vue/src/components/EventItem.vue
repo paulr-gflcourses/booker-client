@@ -107,7 +107,6 @@ export default {
     update() {
       let eventCopy = Object.assign({}, this.event);
       let date = calendar.getEventById(this.id).start_time;
-
       eventCopy.start_time = this.toTimestampFormat(date, eventCopy.start_time);
       eventCopy.end_time = this.toTimestampFormat(date, eventCopy.end_time);
 
@@ -119,8 +118,12 @@ export default {
 
     remove() {
       // alert("are you sure to delete?");
-      calendar.deleteEvent(this.event);
-      this.$router.push('/');
+      let eventCopy = Object.assign({}, this.event);
+      let date = calendar.getEventById(this.id).start_time;
+      eventCopy.start_time = this.toTimestampFormat(date, eventCopy.start_time);
+      eventCopy.end_time = this.toTimestampFormat(date, eventCopy.end_time);
+      calendar.deleteEvent(eventCopy);
+      this.close();
     },
     close(){
       this.$router.push('/');
