@@ -94,6 +94,6 @@ export default {
 
 <style>
 .event-link:focus{
-  color: rgb(229, 188, 211);
+  color: rgb(238, 191, 153);
 }
 </style>

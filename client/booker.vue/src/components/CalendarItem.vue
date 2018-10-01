@@ -17,27 +17,26 @@
         </ul>
         </div>
    
-          
-          <div class="options">
+          </div>
+
+       <div class="options">
     <router-link to="/options">
       <button>Options</button>
     </router-link>
   </div>
-       
         
-      </div>
+      
        <div class="calendar">
         <div class="cal-head">
 
           <div class="month-buttons">
             <button class="prev-month" @click="month--"> &larr; </button>
-            <span class="show-date">{{ showedDate | formatDate}}</span>
             <span class="selected-room">{{ currentRoom.name }}</span>
             <button class="next-month" @click="month++"> &rarr; </button>
           </div>
          
 
-          <p class="toggle">
+          <div class="toggle">
             <label for="month">Month</label>
             <select name="" id="month" v-model="month">
               <option value="0">January</option>
@@ -55,7 +54,8 @@
             </select>
             <label for="year">Year</label>
             <input type="number" v-model="year"/>
-          </p>
+            <span class="show-date">{{ showedDate | formatDate}}</span>
+          </div>
         
         </div>
 
@@ -87,20 +87,18 @@
 
 <div class="right-panel">
 
-  
-  
-
-  <div>
+  <div class="opt-button">
     <router-link to="/newEvent">
       <button>Book It!</button>
     </router-link>
   </div>
 
-  <div>
+  <div class="opt-button">
     <router-link to="/employees">
       <button>Employee List</button>
     </router-link>
   </div>
+
 </div>
 
 
@@ -243,6 +241,7 @@ export default {
 }
 .rooms ul {
   display: inline-block;
+  margin-bottom: 0px;
 }
 
 .rooms ul li {
@@ -259,22 +258,23 @@ export default {
   display: none;
 }
 
-.options{
-  float: right;
-  margin-right: 100px;
+.options {
+  /* float: left; */
+  margin-left: 50px;
 }
 
 .calendar {
   /*width: 355px;*/
+  background: rgb(242, 239, 249);
   margin-left: 40px;
-  margin-top: 40px;
+  margin-top: 10px;
   border: 1px solid rgb(40, 40, 70);
   padding: 15px;
   float: left;
 }
 
 .event-panel {
-  margin-top: 40px;
+  margin-top: 20px;
   margin-left: 50px;
   padding: 5px;
   float: left;
@@ -307,13 +307,23 @@ export default {
   border: 1px solid rgb(40, 40, 70);
   background: rgb(228, 226, 231);
   text-align: center;
-  margin-left: 26%;
+  margin-left: 10px;
   padding: 5px;
 }
 
+
 .selected-room {
+  background: rgb(218, 213, 238);
+  margin-left: 33%;
+  text-align: center;
   border: 1px solid rgb(40, 40, 70);
   padding: 5px;
+}
+
+.toggle{
+  padding: 20px;
+  /* margin: 5px; */
+  text-align: center;
 }
 
 td {
@@ -377,11 +387,14 @@ td {
 }
 
 .right-panel {
-  margin-top: 50px;
-  margin-left: 100px;
-  /* padding: 50px; */
+   margin-top: 40px;
+  margin-left: 50px;
+  /* padding: 5px; */
+  float: left;
 }
-
+.opt-button{
+  padding: 5px;
+}
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s;

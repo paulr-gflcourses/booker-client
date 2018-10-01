@@ -1,12 +1,10 @@
 <template>
     <div class="event-panel">
-        <h2>Event</h2> 
 
-  
     <div class="event-detail">
+      <button class="btn-close" @click="close">x</button>
       <h2>B.B. DETAILS:</h2>
-      
-      <div class="time">
+      <div class="time field">
           <label for="time">When</label>
           <input type="time" id="start-time" name="start-time"
                   min="08:00" max="20:00" step="1800" pattern="[0-9]{2}:[0-9]{2}" required v-model="event.start_time"/>
@@ -14,22 +12,22 @@
           <input type="time" id="end-time" name="end-time"
                   min="08:00" max="20:00" step="1800" pattern="[0-9]{2}:[0-9]{2}" required v-model="event.end_time"/>
       </div>
-      <div>
+      <div class="field">
         <label for="description">Notes</label>
         <textarea name="description" id="description" cols="30" rows="2" v-model="event.description"></textarea>
       </div>
-      <div>
+      <div class="field">
         <label for="user">Who</label>
         <select name="user" id="user" v-model="event.iduser">
           <option v-for="(user, index) in users" :key="index" v-bind:value="user.id">{{ user.fullname }}</option>
         </select>
       </div>
-      <div>
+      <div class="field">
         <b>Submitted:</b> {{ event.created_time | fullDatetoStrTime}}
       </div>
 
-      <div v-if="event.is_recurring">
-        <input id="isrec" type="checkbox"/>
+      <div v-if="event.is_recurring" class="field">
+        <input id="isrec" type="checkbox" v-model="event.applyToAllRec"/>
         <label for="isrec">Apply to all occurences?</label>
       </div>
       
@@ -102,6 +100,8 @@ export default {
       this.event = Object.assign({}, calendar.getEventById(this.id));
       this.event.start_time = this.toStrTime(this.event.start_time);
       this.event.end_time = this.toStrTime(this.event.end_time);
+      this.$set(this.event,'applyToAllRec',false);
+
     },
 
     update() {
@@ -112,13 +112,18 @@ export default {
       eventCopy.end_time = this.toTimestampFormat(date, eventCopy.end_time);
 
       calendar.updateEvent(eventCopy);
-      this.setFields();
+
+      // this.setFields();
 
     },
 
     remove() {
       // alert("are you sure to delete?");
-      calendar.deleteEvent(this.event.id);
+      calendar.deleteEvent(this.event);
+      this.$router.push('/');
+    },
+    close(){
+      this.$router.push('/');
     }
 
   }
@@ -127,4 +132,11 @@ export default {
 </script>
 
 <style>
+.btn-close{
+  float: right;
+}
+
+.field{
+  padding: 5px;
+}
 </style>

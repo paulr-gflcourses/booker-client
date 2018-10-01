@@ -85,6 +85,7 @@
 
 <script>
 import calendar from "../calendar/calendar";
+import utils from "../api/utils";
 
 export default {
   props: [],
@@ -120,46 +121,30 @@ export default {
 
   filters: {},
   methods: {
-    toTimestampFormat(dateStr, timeStr) {
-      let date = new Date(dateStr + " " + timeStr);
-      return (date.getTime() / 1000).toFixed();
-    },
-    formatDate(date) {
-      let year = date.getFullYear();
-      let month = date.getMonth() + 1;
-      month = month < 10 ? "0" + month : "" + month;
-      let day = date.getDate();
-      return "" + year + "-" + month + "-" + day;
-    },
+    
 
     saveEvent() {
       let event = this.transformFields();
-      
-      // calendar.addEvent(event);
-      // this.$router.push('/');
+      calendar.addEvent(event);
+      this.$router.push('/');
     },
 
     transformFields() {
       let eventCopy = Object.assign({}, this.event);
-      eventCopy.start_time = this.toTimestampFormat(
-        this.event.date,
-        eventCopy.start_time
-      );
-      eventCopy.end_time = this.toTimestampFormat(
-        this.event.date,
-        eventCopy.end_time
-      );
-      if (this.is_event_recurring) {
-        
-        let date = new Date(this.event.date + " " + this.event.start_time);
-        eventCopy.days = this.getRecurringDays(date);
 
+      let start_time = new Date(this.event.date + ' ' + eventCopy.start_time);
+      eventCopy.start_time = utils.toTimestampFormat(start_time);
+      let end_time = new Date(this.event.date + ' ' + eventCopy.end_time);
+      eventCopy.end_time = utils.toTimestampFormat(end_time);
+
+      if (this.is_event_recurring) {
+        eventCopy.days = this.getRecurringDays(start_time, end_time);
       }
       return eventCopy;
     },
 
-    getRecurringDays(firstDate) {
-      let days = [firstDate];
+    getRecurringDays(firstDate_start, firstDate_end) {
+      let days = [{start_time: firstDate_start, end_time: firstDate_end}];
       let n = this.event.duration_recurring;
       let periodInDays = 0;
       if (this.event.period === "weekly") {
@@ -171,9 +156,11 @@ export default {
       }
       
       for (let i = 0; i < n; i++) {
-        let nextDate = new Date(firstDate);
-        nextDate.setDate(firstDate.getDate() + periodInDays * (i + 1));
-        days.push(nextDate);
+        let nextDate_start = new Date(firstDate_start);
+        nextDate_start.setDate(firstDate_start.getDate() + periodInDays * (i + 1));
+        let nextDate_end = new Date(firstDate_end);
+        nextDate_end.setDate(firstDate_end.getDate() + periodInDays * (i + 1));
+        days.push({start_time:nextDate_start, end_time: nextDate_end});
       }
     //  alert(days);
       return days;
@@ -183,16 +170,20 @@ export default {
     fillFish() {
       this.event.iduser = "2";
       if (calendar.selectedDate) {
-        this.event.date = this.formatDate(calendar.selectedDate);
+        this.event.date = utils.formatDate(calendar.selectedDate);
+      }else{
+        this.event.date = utils.formatDate(new Date());
       }
+      this.event.idroom = calendar.currentRoom.id;
 
       this.event.start_time = "15:00";
       this.event.end_time = "15:30";
       this.event.description = "Some test description...";
-      this.event.is_recurring = "true";
-      this.event.period = "weekly";
-      this.event.duration_recurring = "3";
-      this.event.idroom = "1";
+       this.event.is_recurring = "false";
+      // this.event.is_recurring = "true";
+      // this.event.period = "weekly";
+      // this.event.duration_recurring = "3";
+      
     }
   }
 };

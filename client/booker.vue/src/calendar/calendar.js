@@ -1,11 +1,12 @@
 import Vue from 'vue';
 // import router from '../router';
 // import axios from 'axios'
-const serverUrl = "http://192.168.0.15/~user12/booker/booker-server/server/api/";
-
-// const serverUrl = "http://127.0.0.1/~paul/booker/booker-server/server/api/";
-// const serverUrl = "http://127.0.0.1/my/courses/booker/booker-server/server/api/";
-
+import {
+  serverUrl
+} from '../api/config'
+import eventsModel from '../api/events'
+import roomsModel from '../api/rooms'
+import usersModel from '../api/users'
 
 export default new Vue({
 
@@ -29,7 +30,7 @@ export default new Vue({
   created() {
     this.rooms = this.getRooms();
     // this.events = this.getEvents();
-    this.users = this.getUsers();
+    this.getUsers();
 
   },
 
@@ -38,13 +39,12 @@ export default new Vue({
   },
 
   methods: {
-    getFirstDayConfig(){
+    getFirstDayConfig() {
       return true;
     },
     getTimeConfig() {
       return true;
     },
-
 
 
     currentMonthDays(yearDate, monthDate) {
@@ -119,234 +119,80 @@ export default new Vue({
     },
 
     getEvents() {
-      let events = [];
-      let url = serverUrl + "events/?idroom=" + this.currentRoom.id;
-      fetch(url)
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Network response was not ok");
-        })
-        .then(json => {
-
-          json.forEach(event => {
-            event.start_time = new Date(event.start_time + " UTC");
-            event.end_time = new Date(event.end_time + " UTC");
-            event.created_time = new Date(event.created_time + " UTC");
-            event.is_recurring = (event.is_recurring === '1');
-            events.push(event);
-          });
-
-        })
-        .catch(error => {
-          alert('Error: ' + error);
-          console.log(error);
-        });
-
-      return events;
+       eventsModel.getEvents(this.currentRoom.id)
+       .then(response => {
+        this.events = response;
+      })
+      .catch(error => {
+        alert(error.data);
+        console.log(error);
+      });
     },
 
     getUsers() {
-      let users = [];
-      let url = serverUrl + "users/";
-      fetch(url)
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Network response was not ok");
-        })
-        .then(json => {
-          //users = json;
-          json.forEach(user => {
-            users.push(user);
-          });
-        })
-        .catch(error => {
+      usersModel.getUsers()
+       .then(response => {
+        this.users = response;
+      })
+      .catch(error => {
+        alert(error.data);
+        console.log(error);
+      });
 
-          console.log(error);
-        });
-
-      return users;
     },
 
     getRooms() {
-      let rooms = [];
-      let url = serverUrl + "rooms/";
-      fetch(url)
+      roomsModel.getRooms()
         .then(response => {
-          if (response.ok) {
-            return response.json();
+          this.rooms = response;
+          if (this.rooms.length > 0) {
+            this.currentRoom = this.rooms[0];
+            this.getEvents();
           }
-          throw new Error("Network response was not ok");
-        })
-        .then(json => {
-          //rooms = json;
-          json.forEach(room => {
-            rooms.push(room);
-          });
-
-          if (rooms.length > 0) {
-            this.currentRoom = rooms[0];
-            this.events = this.getEvents();
-          }
-
         })
         .catch(error => {
           console.log(error);
         });
 
-      return rooms;
     },
 
     updateEvent(event) {
-
-      let url = serverUrl + "events/" + event.id;
-      let formData = new FormData();
-      formData.append('description', event.descripton);
-      formData.append('id', event.id);
-      let params = JSON.stringify(event);
-      // formData = {
-      //   description: event.descripton, 
-      //   id: event.id
-      // };
-
-      let headers = new Headers();
-      // headers.append('Content-Type', 'application/json');
-      // headers.append('Accept', 'application/json');
-
-      headers.append('Access-Control-Allow-Origin', '*');
-      // headers.append('Access-Control-Allow-Credentials', 'true');
-      // headers.append('GET', 'POST', 'PUT', 'OPTIONS');
-      headers.append('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
-
-      let opt = {
-        // mode: 'cors-with-forced-preflight',
-        method: 'PUT',
-        // credentials: 'include',
-        headers: headers,
-        body: params
-      };
-      fetch(url, opt)
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Network response was not ok");
-        })
-        .then(json => {
-          //rooms = json;
-          //   json.forEach(room => {
-          //     rooms.push(room);
-          //   });
-
-          //   if (rooms.length>0){
-          //     this.currentRoom = rooms[0];
-          //     this.events = this.getEvents();
-          //  }
-          this.events = this.getEvents();
-          // alert('succesfully updated! '+json);
-          // alert('stringify: '+JSON.stringify(json));
-          // alert('Parsed: '+JSON.parse(json));
-
-        })
-        .catch(error => {
-          alert('Error: ' + error);
-          console.log(error);
-        });
-
-
-
-      // axios.put(url, {
-      //     body: params
-      //   })
-      //   .then(response => {
-      console.log(response);
-      //     if (response.ok) {
-      //       return response.json();
-      //     }
-      //     // throw new Error("Network response was not ok");
-      //   })
-      //   .then(json => {
-      //     alert('succesfully updated! ' + json);
-
-      //   })
-      //   .catch(error => {
-      //     console.log(error);
-      //   });
-
+      eventsModel.updateEvent(event)
+      .then(response => {
+        this.getEvents();
+      })
+      .catch(error => {
+        alert(error.data.errors);
+        console.log(error.data.errors);
+      });
 
     },
     addEvent(event) {
-
-      let data = JSON.stringify(event);
-      let url = serverUrl + "events/";
-
-      let headers = new Headers();
-      headers.append('Access-Control-Allow-Origin', '*');
-      headers.append('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
-      let opt = {
-        method: 'POST',
-        headers: headers,
-        body: data
-        // body: formData
-      };
-
-      fetch(url, opt)
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Network response was not ok");
-        })
-        .then(json => {
-          this.events = this.getEvents();
-          // alert('succesfully added! '+json);
-
-
-          // alert('stringify: '+JSON.stringify(json));
-          // alert('Parsed: '+JSON.parse(json));
-
-        })
-        .catch(error => {
-          alert('Server: ' + error);
-          console.log(error);
-        });
+      eventsModel.addEvent(event)
+      .then(response => {
+        alert(response);
+        console.log(response);
+        this.getEvents();
+      })
+      .catch(error => {
+        // alert('Some Error: ('+error.status+")" + error.data.errors);
+        alert(error.data.errors);
+        console.log(error.data.errors);
+      });
 
     },
 
     deleteEvent(id) {
-      let url = serverUrl + "events/" + id;
-      let opt = {
-        method: 'DELETE',
-        // headers: {
-        //   'Accept': 'application/json',
-        //   'Content-Type': 'application/json'
-        // },
-        // body: data
-        // // body: formData
-      };
-      fetch(url, opt)
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Network response was not ok");
-        })
-        .then(json => {
-          this.events = this.getEvents();
-          // alert('succesfully deleted! '+json);
-          // alert('stringify: '+JSON.stringify(json));
-          // alert('Parsed: '+JSON.parse(json));
+      eventsModel.deleteEvent(id)
+      .then(response => {
+        this.getEvents();
+      })
+      .catch(error => {
+        alert('Error: ' + error);
+        console.log(error);
+      });
 
-        })
-        .catch(error => {
-          alert('Error: ' + error);
-          console.log(error);
-        });
-
-    }
+    },
 
   }
 });

@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2>Employees</h2>
-        <div>
+        <div class="opt-button">
            <router-link to="/">
              <button>Back</button>
             </router-link>
@@ -25,9 +25,12 @@
                </td>
             </tr>
         </table>
-        <router-link to="/employee">
+        <div class="opt-button">
+            <router-link to="/employee">
             <button>Add a new employee</button>
-        </router-link>
+            </router-link>
+        </div>
+        
     </div>
 </template>
 
@@ -39,7 +42,7 @@ export default {
 
   data() {
     return {
-        employeeList: calendar.getUsers()
+        employeeList: calendar.users
     };
   },
 

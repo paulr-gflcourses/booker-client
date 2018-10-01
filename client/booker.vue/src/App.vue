@@ -1,6 +1,12 @@
 <template>
   <div id="app">
-      <h1 class="caption">Boardroom Booker</h1>
+    
+      <div class="header">
+         <h1 class="caption">Boardroom Booker</h1>
+      </div>
+     
+   
+      
       <!-- <calendar-item></calendar-item> -->
       <router-view/>
   </div>
@@ -21,7 +27,17 @@ export default {
 </script>
 
 <style>
+
+  .header{
+    height: 50px;
+    width: 100%;
+    margin: 0px;
+    padding: 10px;
+    background: rgb(214, 217, 243);
+  }
   .caption{
+    margin: 0px;
+    padding: 0px;
     text-align: center;
     
   }
