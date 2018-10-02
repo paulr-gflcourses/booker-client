@@ -150,7 +150,13 @@ export default {
     }
   },
 
-  mounted() {},
+  created(){
+    if (calendar.currentMonthDate){
+      this.day= calendar.currentMonthDate.getDate();
+      this.month= calendar.currentMonthDate.getMonth();
+      this.year= calendar.currentMonthDate.getFullYear();
+    }
+  },
 
   components: {
     DayItem
@@ -211,6 +217,7 @@ export default {
   methods: {
     selectDay(date, tasks) {
       calendar.selectedDate = date;
+      calendar.currentMonthDate = date;
       this.day = date.getDate();
       this.month = date.getMonth();
       this.year = date.getFullYear();
@@ -365,6 +372,9 @@ td {
 .hasEvent {
   background: rgb(206, 189, 172);
 }
+.passedEvent{
+  background: rgb(192, 182, 172);
+}
 
 .otherMonth {
   background: rgb(228, 226, 231);
@@ -383,7 +393,7 @@ td {
 
 .selected.day:hover,
 .selected {
-  background: rgb(103, 82, 128);
+  background: rgb(123, 100, 150);
 }
 
 .right-panel {

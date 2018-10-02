@@ -19,7 +19,9 @@
       <div class="field">
         <label for="user">Who</label>
         <select name="user" id="user" v-model="event.iduser">
-          <option v-for="(user, index) in users" :key="index" v-bind:value="user.id">{{ user.fullname }}</option>
+          <option v-for="(user, index) in users" :key="index" v-bind:value="user.id" v-bind:disabled="!user.is_active">
+            {{ user.fullname }}
+            </option>
         </select>
       </div>
       <div class="field">
@@ -43,6 +45,8 @@
 
 <script>
 import calendar from "../calendar/calendar";
+import eventsModel from "../api/events";
+import utils from "../api/utils";
 
 export default {
   props: ["id"],
@@ -85,23 +89,21 @@ export default {
   },
 
   methods: {
-
     toStrTime(date) {
       let options = { hour: "2-digit", minute: "2-digit", hour12: false };
       return date.toLocaleTimeString("en-US", options);
     },
 
     toTimestampFormat(dateSrc, timeStr) {
-      let date = new Date(dateSrc.toDateString()+ " "+timeStr);
-      return (date.getTime()/1000).toFixed()
+      let date = new Date(dateSrc.toDateString() + " " + timeStr);
+      return (date.getTime() / 1000).toFixed();
     },
 
     setFields() {
       this.event = Object.assign({}, calendar.getEventById(this.id));
       this.event.start_time = this.toStrTime(this.event.start_time);
       this.event.end_time = this.toStrTime(this.event.end_time);
-      this.$set(this.event,'applyToAllRec',false);
-
+      this.$set(this.event, "applyToAllRec", false);
     },
 
     update() {
@@ -109,37 +111,48 @@ export default {
       let date = calendar.getEventById(this.id).start_time;
       eventCopy.start_time = this.toTimestampFormat(date, eventCopy.start_time);
       eventCopy.end_time = this.toTimestampFormat(date, eventCopy.end_time);
-
       calendar.updateEvent(eventCopy);
-
-      // this.setFields();
-
     },
 
     remove() {
-      // alert("are you sure to delete?");
       let eventCopy = Object.assign({}, this.event);
-      let date = calendar.getEventById(this.id).start_time;
-      eventCopy.start_time = this.toTimestampFormat(date, eventCopy.start_time);
-      eventCopy.end_time = this.toTimestampFormat(date, eventCopy.end_time);
-      calendar.deleteEvent(eventCopy);
+      let dbEvent = calendar.getEventById(this.id);
+      eventCopy.start_time = this.toTimestampFormat(
+        dbEvent.start_time,
+        eventCopy.start_time
+      );
+      eventCopy.end_time = this.toTimestampFormat(
+        dbEvent.end_time,
+        eventCopy.end_time
+      );
+      eventsModel
+        .deleteEvent(eventCopy)
+        .then(response => {
+          let time1 = utils.digitTime(dbEvent.start_time);
+          let time2 = utils.digitTime(dbEvent.end_time);
+          alert("The event " + time1 + "-" + time2 + " has been removed");
+          calendar.getEvents();
+        })
+        .catch(error => {
+          alert(error.data.errors);
+          console.log(error.data.errors);
+        });
       this.close();
     },
-    close(){
-      this.$router.push('/');
-    }
 
+    close() {
+      this.$router.push("/");
+    }
   }
-  
 };
 </script>
 
 <style>
-.btn-close{
+.btn-close {
   float: right;
 }
 
-.field{
+.field {
   padding: 5px;
 }
 </style>

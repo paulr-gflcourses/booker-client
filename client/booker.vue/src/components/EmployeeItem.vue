@@ -2,6 +2,12 @@
     <div>
         <h2>Employee</h2>
         
+        <div class="opt-button">
+           <router-link to="/employees">
+             <button>Back</button>
+            </router-link>
+        </div>
+
         <div>
           <div>
             <label for="fullname">1. Enter new employee full name</label>
@@ -25,7 +31,7 @@
             <input id="is_admin" type="checkbox" v-model="user.is_admin"/>
             <label for="password">Is Admin</label>
           </div>
-          <button @click="addEmployee">Add</button>
+          <button @click="save">Save</button>
 
         </div>
         
@@ -48,8 +54,8 @@ export default {
         email: "",
         username: "",
         password: "",
-        is_admin: true,
-        is_active: true
+        is_admin: "",
+        is_active: ""
       }
     };
   },
@@ -57,6 +63,10 @@ export default {
   created(){
     if (this.id){
       this.user = calendar.users.filter(user=>(user.id==this.id))[0];
+
+    }else{
+      this.user.is_active = true;
+      this.user.is_admin = true;
     }
   },
   computed: {
@@ -67,16 +77,21 @@ export default {
     
   },
   methods: {
+    save(){
+      if (this.id){
+        this.updateEmployee();
+      }else{
+        this.addEmployee();
+      }
+    },
     addEmployee(){
       usersModel.addUser(this.user)
       .then(response => {
+        alert('User '+this.user.fullname+' has been added.');
         calendar.getUsers();
-        alert('Added!');
-    //   this.$router.push('/');
         this.$router.go(-1)
       })
       .catch(error => {
-        // alert('Some Error: ('+error.status+")" + error.data.errors);
         alert(error.data.errors);
         console.log(error.data.errors);
       });
@@ -85,17 +100,17 @@ export default {
     updateEmployee(){
       usersModel.updateUser(this.user)
       .then(response => {
+        alert('User '+this.user.fullname+' has been edited.');
         calendar.getUsers();
-        alert('Added!');
-    //   this.$router.push('/');
         this.$router.go(-1)
       })
       .catch(error => {
-        // alert('Some Error: ('+error.status+")" + error.data.errors);
         alert(error.data.errors);
         console.log(error.data.errors);
       });
     },
+
+  
 
     
 

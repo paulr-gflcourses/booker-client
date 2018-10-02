@@ -54,38 +54,15 @@ export default {
 
       deleteEvent(event) {
         return new Promise((resolve, reject) => {
-        let url = serverUrl + "events/" + event.id;
-        let data = JSON.stringify(event);
-        let opt = {
-          method: 'DELETE',
-          body: data
-        };
-        fetch(url, opt)
-          .then(response => {
-            if (response.ok) {
-              return response.json();
-            }
-            throw new Error("Network response was not ok");
-          })
-          .then(json => {
-            resolve();
-          })
-          .catch(error => {
-            reject(error);
+          let url = serverUrl + "events/" + event.id;
+          axios.delete(url, {data:event})
+            .then(response => {
+              resolve(response.data)
+            })
+            .catch(error => {
+              reject(error.response);
+            });
           });
-        });
-
-
-        // return new Promise((resolve, reject) => {
-        //   let url = serverUrl + "events/" + event.id;
-        //   axios.delete(url, event)
-        //     .then(response => {
-        //       resolve(response.data)
-        //     })
-        //     .catch(error => {
-        //       reject(error.response);
-        //     });
-        //   });
   
      
 

@@ -28,8 +28,10 @@ export default new Vue({
 
 
   created() {
-    this.getRooms();
-    // this.events = this.getEvents();
+    if (this.rooms.length===0){
+      this.getRooms();
+    }
+  
     this.getUsers();
 
   },
@@ -124,8 +126,8 @@ export default new Vue({
         this.events = response;
       })
       .catch(error => {
-        alert(error.data);
-        console.log(error);
+        alert(error.data.errors);
+        console.log(error.data.errors);
       });
     },
 
@@ -135,8 +137,8 @@ export default new Vue({
         this.users = response;
       })
       .catch(error => {
-        alert(error);
-        console.log(error);
+        alert(error.data.errors);
+        console.log(error.data.errors);
       });
 
     },
@@ -167,31 +169,8 @@ export default new Vue({
       });
 
     },
-    addEvent(event) {
-      eventsModel.addEvent(event)
-      .then(response => {
-        this.getEvents();
-      })
-      .catch(error => {
-        // alert('Some Error: ('+error.status+")" + error.data.errors);
-        alert(error.data.errors);
-        console.log(error.data.errors);
-      });
 
-    },
-
-    deleteEvent(event) {
-      eventsModel.deleteEvent(event)
-      .then(response => {
-        console.log(response);
-        this.getEvents();
-      })
-      .catch(error => {
-        alert('Error: ' + error);
-        console.log(error.data.errors);
-      });
-
-    },
+    
 
    
 

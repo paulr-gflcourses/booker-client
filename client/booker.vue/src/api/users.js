@@ -9,8 +9,13 @@ import {
         let url = serverUrl + "users/";
         axios.get(url)
           .then(response => {
-            resolve(response.data)
+            let users = response.data;
+            users.forEach(user => {
+              user.is_active = (user.is_active === '1');
+              user.is_admin = (user.is_admin === '1');
+            resolve(users);
           })
+        })
           .catch(error => {
             reject(error.response);
           });
@@ -46,10 +51,10 @@ import {
     
     },
 
-    removeUser(user) {
+    deleteUser(user) {
       return new Promise((resolve, reject) => {
       let url = serverUrl + "users/" + user.id;
-       axios.delete(url, user)
+       axios.delete(url, {data:user})
         .then(response => {
           resolve(response.data)
         })

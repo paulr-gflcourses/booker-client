@@ -87,6 +87,7 @@
 
 <script>
 import calendar from "../calendar/calendar";
+import eventsModel from '../api/events'
 import utils from "../api/utils";
 
 export default {
@@ -127,8 +128,19 @@ export default {
   
     saveEvent() {
       let event = this.transformFields();
-      calendar.addEvent(event);
-      this.$router.push('/');
+       eventsModel.addEvent(event)
+      .then(response => {
+        calendar.getEvents();
+        let time1 =  utils.digitTime(new Date(this.event.date + ' ' + this.event.start_time));
+        let time2 =  utils.digitTime(new Date(this.event.date + ' ' + this.event.end_time));
+        alert('The event '+time1+ '-'+time2+' has been added. The text for this event is: '+event.description);
+        this.$router.push('/');
+      })
+      .catch(error => {
+        alert(error.data.errors);
+        console.log(error.data.errors);
+      });
+      
     },
 
     transformFields() {
@@ -151,11 +163,7 @@ export default {
       this.event.idroom = calendar.currentRoom.id;
       this.event.is_recurring = "false";
 
-      this.event.period = "weekly";
-      this.event.start_time = "15:00";
-      this.event.end_time = "15:30";
-      this.event.description = "Some test description...";
-      
+
       
     }
   }
