@@ -108,10 +108,22 @@ export default {
 
     update() {
       let eventCopy = Object.assign({}, this.event);
-      let date = calendar.getEventById(this.id).start_time;
+      let dbEvent = calendar.getEventById(this.id);
+      let date = dbEvent.start_time;
       eventCopy.start_time = this.toTimestampFormat(date, eventCopy.start_time);
       eventCopy.end_time = this.toTimestampFormat(date, eventCopy.end_time);
-      calendar.updateEvent(eventCopy);
+      eventsModel.updateEvent(eventCopy)
+      .then(response => {
+        let time1 = utils.digitTime(dbEvent.start_time);
+        let time2 = utils.digitTime(dbEvent.end_time);
+        alert("The event " + time1 + "-" + time2 + " has been changed");
+        calendar.getEvents();
+      })
+      .catch(error => {
+        alert(error.data.errors);
+        console.log(error.data.errors);
+      });
+     
     },
 
     remove() {
@@ -125,8 +137,7 @@ export default {
         dbEvent.end_time,
         eventCopy.end_time
       );
-      eventsModel
-        .deleteEvent(eventCopy)
+      eventsModel.deleteEvent(eventCopy)
         .then(response => {
           let time1 = utils.digitTime(dbEvent.start_time);
           let time2 = utils.digitTime(dbEvent.end_time);
