@@ -11,7 +11,12 @@
       </p>
       <p>
          <select name="user" id="user" v-model="event.iduser">
-          <option v-for="(user, index) in users" :key="index" v-bind:value="user.id">{{ user.fullname }}</option>
+            <option v-for="(user, index) in users" 
+            :key="index" 
+            v-bind:value="user.id"
+            v-bind:disabled="!user.is_active">
+              {{ user.fullname }}
+            </option>
         </select>
       </p>
       <p>
@@ -131,7 +136,7 @@ export default {
        eventsModel.addEvent(event)
       .then(response => {
         calendar.getEvents();
-        let time1 =  utils.digitTime(new Date(this.event.date + ' ' + this.event.start_time));
+        let time1 = utils.digitTime(new Date(this.event.date + ' ' + this.event.start_time));
         let time2 =  utils.digitTime(new Date(this.event.date + ' ' + this.event.end_time));
         alert('The event '+time1+ '-'+time2+' has been added. The text for this event is: '+event.description);
         this.$router.push('/');
@@ -145,10 +150,20 @@ export default {
 
     transformFields() {
       let eventCopy = Object.assign({}, this.event);
-      let start_time = new Date(this.event.date + ' ' + eventCopy.start_time);
-      eventCopy.start_time = utils.toTimestampFormat(start_time);
-      let end_time = new Date(this.event.date + ' ' + eventCopy.end_time);
-      eventCopy.end_time = utils.toTimestampFormat(end_time);
+      let start_time='';
+      let end_time='';
+      if (this.event.date){
+        if (eventCopy.start_time){
+          start_time = new Date(this.event.date + ' ' + eventCopy.start_time);
+          eventCopy.start_time = utils.toTimestampFormat(start_time);
+        }
+        if(eventCopy.end_time){
+          end_time = new Date(this.event.date + ' ' + eventCopy.end_time);
+          eventCopy.end_time = utils.toTimestampFormat(end_time);
+        }
+      }
+     
+      
       return eventCopy;
     },
 

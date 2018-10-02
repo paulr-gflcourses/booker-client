@@ -49,7 +49,6 @@ export default {
   data() {
     return {
       user: {
-        
         fullname: "",
         email: "",
         username: "",
