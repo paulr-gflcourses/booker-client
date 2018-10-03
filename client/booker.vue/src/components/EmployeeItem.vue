@@ -8,30 +8,30 @@
             </router-link>
         </div>
 
-        <div>
-          <div>
+        <div class="employee-data">
+          <div class="field-row">
             <label for="fullname">1. Enter new employee full name</label>
             <input id="fullname" type="text" v-model="user.fullname"/>
           </div>
 
-          <div>
+          <div class="field-row">
             <label for="email">2. Enter new employee e-mail</label>
             <input id="email" type="email" v-model="user.email"/>
           </div>
 
-          <div>
+          <div class="field-row">
             <label for="username">3. Enter new employee username</label>
             <input id="username" type="text" v-model="user.username"/>
           </div>
-          <div>
+          <div class="field-row">
             <label for="password">4. Enter new employee password</label>
             <input id="password" type="password" v-model="user.password"/>
           </div>
-          <div>
+          <div class="is-admin">
             <input id="is_admin" type="checkbox" v-model="user.is_admin"/>
             <label for="password">Is Admin</label>
           </div>
-          <button @click="save">Save</button>
+          <button class="btn" @click="save">Save</button>
 
         </div>
         
@@ -120,4 +120,31 @@ export default {
 </script>
 
 <style>
+.employee-data{
+  padding: 20px;
+  display: table;
+}
+
+.field-row{
+  padding: 5px;
+  display: table-row;
+}
+
+
+.field-row input,
+.field-row label{
+  
+   display: table-cell;
+}
+
+.field-row label{
+  padding: 10px;
+}
+
+.is-admin{
+  margin-left: 10px
+}
+.btn{
+  margin-top: 10px
+}
 </style>

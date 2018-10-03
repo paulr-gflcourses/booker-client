@@ -31,16 +31,22 @@ export default {
     };
   },
 
+  created(){
+    let user = JSON.parse(localStorage.getItem('user') || '[]');
+  },
+
   computed: {},
 
   filters: {},
   methods: {
     login() {
-      if (this.input.username != "" && this.input.password != "") {
+      
+      
+        if (this.input.username != "" && this.input.password != "") {
         users.login(this.input)
           .then(response => {
-            alert('Login success!');
-            console.log(response);
+            calendar.user=response;
+            this.$router.push("/");
           })
           .catch(error => {
             alert(error.data.errors);
@@ -49,6 +55,9 @@ export default {
       } else {
         alert("A username and password must be present");
       }
+
+     
+      
     }
   }
 };

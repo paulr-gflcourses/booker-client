@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <div class="options-page">
         <h2>Options</h2>
         <div>
            <router-link to="/">
              <button>Back</button>
             </router-link>
         </div>
-        <div>
+        <div class="options-input">
             <h4>Time format</h4>
             <div>
                 
@@ -56,4 +56,12 @@ export default {
 </script>
 
 <style>
+
+.options-page{
+  margin-left: 20px;
+}
+
+.options-input{
+  margin-left: 20px;
+}
 </style>

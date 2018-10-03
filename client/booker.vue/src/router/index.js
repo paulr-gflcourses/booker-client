@@ -13,6 +13,34 @@ import Page404 from '@/components/Page404'
 import calendar from '../calendar/calendar';
 Vue.use(Router)
 
+const isLogin = (to, from, next) => {
+  if (calendar.user) {
+    next()
+    return
+  }else{
+    let user = JSON.parse(localStorage.getItem('user') || '[]');
+    if (user){
+      user.is_active = (user.is_active === '1');
+      user.is_admin = (user.is_admin === '1');
+      calendar.user = user;
+      next()
+      return
+    }
+  }
+  next('/login')
+};
+
+const isAdmin = (to, from, next) => {
+  let admin= (calendar.user.is_admin === '1');
+  if (admin && isLogin) {
+    next()
+    return
+  }else{
+    alert('You should be authorized as admin!');
+    return
+  }
+}
+
 export default new Router({
   routes: [
     {
@@ -26,7 +54,8 @@ export default new Router({
           component: EventItem,
           props: true,
         }
-      ]
+      ],
+      beforeEnter: isLogin
     },
     {
       path: '/login',
@@ -37,27 +66,32 @@ export default new Router({
       path: '/newEvent',
       name: 'BookItem',
       component: BookItem,
+      beforeEnter: isLogin
     },
     {
       path: '/employees',
       name: 'EmployeeListItem',
       component: EmployeeListItem,
+      beforeEnter: isAdmin
     },
     {
       path: '/employee/:id',
       name: 'EmployeeItem',
       component: EmployeeItem,
-      props: true
+      props: true,
+      beforeEnter: isAdmin
     },
     {
       path: '/employee',
       name: 'EmployeeItem',
-      component: EmployeeItem
+      component: EmployeeItem,
+      beforeEnter: isAdmin
     },
     {
       path: '/options',
       name: 'OptionsItem',
-      component: OptionsItem
+      component: OptionsItem,
+      beforeEnter: isLogin
     },
     {
       path: '/404',

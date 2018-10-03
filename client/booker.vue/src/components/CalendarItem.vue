@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div >
       <div class="rooms">
-        <div>
+        <div >
           <ul>
           <li v-for="(room, index) in rooms" :key="index">
             <a href="#" @click="selectRoom(room)">Boardroom {{index+1}}</a>
@@ -9,7 +9,7 @@
         </ul>
         </div>
 
-        <div class="room">
+        <div >
           <ul>
           <li v-for="(room, index) in rooms" :key="index">
             <a href="#" @click="selectRoom(room)"> {{room.name}}</a> 
@@ -17,7 +17,7 @@
         </ul>
         </div>
    
-          </div>
+        </div>
 
        <div class="options">
     <router-link to="/options">
@@ -289,7 +289,7 @@ body{
 
 .event-detail {
   border: 1px solid rgb(40, 40, 70);
-  background: rgb(208, 230, 181);
+  background: rgb(207, 222, 160);
   padding: 20px;
 }
 
@@ -370,10 +370,10 @@ td {
 }
 
 .hasEvent {
-  background: rgb(206, 189, 172);
+  background: rgb(212, 189, 165);
 }
 .passedEvent{
-  background: rgb(192, 182, 172);
+  background: rgb(195, 186, 168);
 }
 
 .otherMonth {

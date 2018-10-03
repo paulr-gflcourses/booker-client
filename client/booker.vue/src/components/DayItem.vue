@@ -11,7 +11,7 @@
       v-on:click="$emit('select-day', date, events)"> 
 
       <div class="day-number">{{ date | formatDate }}</div>
-      <ul>
+      <ul class="event-list">
           <li v-for="(event,index) in events" :key="index">
             <!-- <a href="event" v-on:click="$emit('show-event', event)"> -->
               <router-link :to="event | eventLink" class="event-link" v-bind:class="{eventExpired: isExpired(event)}" >
@@ -108,8 +108,12 @@ export default {
 </script>
 
 <style>
+.event-list li{
+  padding-top:5px;
+}
 .event-link{
-  color: rgb(56, 26, 167);
+  color: rgb(38, 14, 128);
+  
 }
 
 /* .selected.day:hover  .event-link{

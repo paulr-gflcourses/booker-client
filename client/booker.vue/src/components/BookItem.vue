@@ -101,7 +101,7 @@ export default {
   data() {
     return {
       event: {
-        iduser: "",
+        iduser: calendar.user.id,
         date: "",
         start_time: "",
         end_time: "",

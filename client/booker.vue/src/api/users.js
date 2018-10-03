@@ -4,6 +4,9 @@ import {
 import axios from 'axios'
 export default {
 
+
+  user:"",
+
   getUsers() {
     return new Promise((resolve, reject) => {
       let url = serverUrl + "users/";
@@ -71,7 +74,7 @@ export default {
       let url = serverUrl + "users/";
       axios.put(url, user)
         .then(response => {
-
+          
           resolve(response.data)
         })
         .catch(error => {

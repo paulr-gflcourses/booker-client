@@ -1,6 +1,5 @@
 import Vue from 'vue';
-// import router from '../router';
-// import axios from 'axios'
+
 import {
   serverUrl
 } from '../api/config'
@@ -15,6 +14,8 @@ export default new Vue({
       currentMonthDate: new Date(),
       today: new Date(),
       selectedDate: '',
+
+      user: "",
 
       events: [],
       users: [],
@@ -37,7 +38,12 @@ export default new Vue({
   },
 
   watch: {
-
+    user: {
+    handler: function(val) {
+      localStorage.setItem('user', JSON.stringify(val))
+    },
+    deep: true
+  }
   },
 
   methods: {
