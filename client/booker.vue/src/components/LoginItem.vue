@@ -1,14 +1,25 @@
 <template>
     <div>
        
-         <div id="login">
+        <div class="login">
           <h2>Login</h2>
-            <label for="username">username</label>
-            <input type="text" id="username" name="username" v-model="input.username" placeholder="Username" />
-            
-            <label for="password">password</label>
-            <input type="password" id="password" name="password" v-model="input.password" placeholder="Password" />
+          <div class="fields">
+            <div class="row">
+              <label for="username">username</label>
+              <input type="text" id="username" name="username" v-model="input.username" placeholder="Username" />
+              <br>
 
+            </div>
+            <div class="row">
+              <label for="password">password</label>
+              <input type="password" id="password" name="password" v-model="input.password" placeholder="Password" />
+              <br>
+
+            </div>
+            
+
+          </div>
+            
             <button type="button" @click="login">Login</button>
         </div>
       
@@ -64,4 +75,20 @@ export default {
 </script>
 
 <style>
+.login{
+
+  margin-left: 20px;
+  
+}
+.fields{
+    margin-left: 20px;
+    padding: 5px;
+}
+
+.row{
+  padding: 5px;
+}
+.login button{
+  margin-left: 20px;
+}
 </style>
